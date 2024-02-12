@@ -1,9 +1,11 @@
 import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
 import { EVENT_TYPE } from "../../../lib/types";
 import { useState } from "react";
-import DateTimePicker from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown'
 import { useRouter } from "expo-router";
+import { call } from "../../_layout";
+import { octokit } from "../../../lib/utils";
+import { REPO_NAME, REPO_OWNER } from "../../../lib/constants";
 
 const CreateEvent = () => {
 
@@ -34,8 +36,18 @@ const CreateEvent = () => {
 
     const handleCreate = async () => {
         if (buttonType == "CONFIRM") {
-            // TODO: SAVE
+            const res = await fetch("/api/event/PUT" as `http${string}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    event_name: createData.title,
+                    event_data: createData,
+                    type: "CREATE"
+                })
+            })
+            const data = await res.json();
+            console.log(data);
             router.push(`/events` as `http${string}`);
+            setCreateData(defaultData);
             return;
         }
         setButtonType("CONFIRM");
@@ -176,29 +188,7 @@ const CreateEvent = () => {
                             />
                         </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Date</Text>
-                        <DateTimePicker
-                            value={new Date()}
-                            mode='date'
-                            display='spinner'
-                            textColor='black'
-                            style={{ backgroundColor: "rgb(243 244 246)", borderWidth: 2, borderColor: "black", borderRadius: 5 }}
-                            onChange={date => {
-                                createData.details.date = new Date(date.nativeEvent.timestamp).toDateString();
-                                setCreateData({ ...createData });
-                            }}
-                        />
                         <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
-                        <DateTimePicker
-                            value={new Date()}
-                            mode='time'
-                            display='spinner'
-                            textColor='black'
-                            style={{ backgroundColor: "rgb(243 244 246)", borderWidth: 2, borderColor: "black", borderRadius: 5 }}
-                            onChange={time => {
-                                createData.details.time = [new Date(time.nativeEvent.timestamp).getHours(), new Date(time.nativeEvent.timestamp).getMinutes()];
-                                setCreateData({ ...createData });
-                            }}
-                        />
                     </View>
 
                     <Text className={InputLabelStyle}>Contact</Text>

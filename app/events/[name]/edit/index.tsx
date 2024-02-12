@@ -1,10 +1,10 @@
 import SelectDropdown from 'react-native-select-dropdown'
-import DateTimePicker from '@react-native-community/datetimepicker';
+// import DateTimePicker from '@react-native-community/datetimepicker';
 import { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { INFO_URL } from '../../../../lib/constants';
-import { PARSE } from '../../../../lib/utils/PARSE';
+import { PARSE } from '../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../lib/types';
 import { Loading } from '../../../../lib/components';
 
@@ -23,7 +23,7 @@ const EditEvent = () => {
 
     useEffect(() => {
         const CALL = async () => {
-            const res = await fetch(INFO_URL(params.name as string));
+            const res = await fetch("/api/event/" + params.name as `http${string}`);
             const D = await res.json();
             setData(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
             setTempData(JSON.stringify(PARSE(D.payload.blob.rawLines) as EVENT_TYPE));
@@ -34,13 +34,20 @@ const EditEvent = () => {
 
     if (!data) return <Loading />
 
-    const save = async () => {
+    const handleSave = async () => {
         if (buttonType == "CONFIRM") {
             if (tempData == JSON.stringify(data)) {
                 router.push(`/events/${params.name}` as `http${string}`);
                 return;
             }
-            // TODO: SAVE
+            const res = await fetch("/api/event/PUT" as `http${string}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    event_name: JSON.parse(tempData).title,
+                    event_data: data,
+                    type: "UPDATE"
+                })
+            })
             router.push(`/events/${params.name}` as `http${string}`);
             return;
         }
@@ -183,29 +190,7 @@ const EditEvent = () => {
                             />
                         </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Date</Text>
-                        <DateTimePicker
-                            value={new Date(data.details.date)}
-                            mode='date'
-                            display='spinner'
-                            textColor='black'
-                            style={{ backgroundColor: "rgb(243 244 246)", borderWidth: 2, borderColor: "black", borderRadius: 5 }}
-                            onChange={date => {
-                                data.details.date = new Date(date.nativeEvent.timestamp).toDateString();
-                                setData({ ...data });
-                            }}
-                        />
                         <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
-                        <DateTimePicker
-                            value={new Date(data.details.date)}
-                            mode='time'
-                            display='spinner'
-                            textColor='black'
-                            style={{ backgroundColor: "rgb(243 244 246)", borderWidth: 2, borderColor: "black", borderRadius: 5 }}
-                            onChange={time => {
-                                data.details.time = [new Date(time.nativeEvent.timestamp).getHours(), new Date(time.nativeEvent.timestamp).getMinutes()];
-                                setData({ ...data });
-                            }}
-                        />
                     </View>
 
                     <Text className={InputLabelStyle}>Contact</Text>
@@ -300,7 +285,7 @@ const EditEvent = () => {
                     </Pressable>
                 </View>
             </ ScrollView>
-            <View className="flex flex-row"><Pressable onPress={save} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
+            <View className="flex flex-row"><Pressable onPress={handleSave} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
         </SafeAreaView>
     )
 }

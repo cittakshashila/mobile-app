@@ -4,9 +4,10 @@ import { Text, View } from "react-native"
 const Main = () => {
     return (
         <View className="w-full h-full flex flex-col items-center justify-center">
-            <Text className="underline">
-                <Link href={"/events" as `http${string}`} >  EVENTS! </Link>
-            </Text>
+            <View className="flex flex-col">
+                <Link className="underline m-2" href={"/events" as `http${string}`} >  EVENTS! </Link>
+                <Link className="underline m-2" href={"/" as `http${string}`} >  SCAN TAG! </Link>
+            </View>
         </View >
     )
 }

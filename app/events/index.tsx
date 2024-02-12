@@ -11,8 +11,9 @@ const Event = () => {
 
     useEffect(() => {
         const GET = async () => {
-            const res = await fetch(FOLDER_URL);
+            const res = await fetch("/api/event/folder" as `http${string}`);
             const data = await res.json();
+            console.log(data);
             setData(data.payload.tree.items);
         }
         GET();
@@ -30,7 +31,7 @@ const Event = () => {
                     {data.map((event, event_idx) => {
                         return (
                             <TouchableOpacity onPress={() => router.push(`/events/${event.name}` as `http${string}`)} key={event_idx} className="m-2 relative bg-gray-100" >
-                                <Image key={event_idx} alt={`${event.name}`} className="border-2 border-black w-full" height={200} source={{ uri: MEDIA_URL(event.name, 1) }} />
+                                <Image key={event_idx} alt={`${event.name}`} className="w-full bg-gray-300" height={200} source={{ uri: MEDIA_URL(event.name, 1) }} />
                                 <View style={{ backgroundColor: "rgba(0,0,0,0.6)" }} className="bg-black absolute w-full h-fit p-2 top-[78%] rounded-b-md">
                                     <Text className="text-white text-lg text-center"> {event.name} </Text>
                                 </View>
