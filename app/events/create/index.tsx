@@ -34,6 +34,20 @@ const CreateEvent = () => {
     const InputStyle = "bg-gray-100 py-4 px-2 rounded-md border-2 border-black mb-2";
     const InputLabelStyle = "text-xl font-black mt-2";
 
+    const [toggle, setToggle] = useState<{
+        title: boolean,
+        description: boolean,
+        rules: boolean,
+        guidelines: boolean,
+        registrations: boolean,
+    }>({
+        title: true,
+        description: true,
+        rules: true,
+        guidelines: true,
+        registrations: true,
+    })
+
     const handleCreate = async () => {
         if (buttonType == "CONFIRM") {
             const res = await fetch("/api/event/PUT" as `http${string}`, {
@@ -57,8 +71,22 @@ const CreateEvent = () => {
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
                 <View className="m-2">
-                    <Text className={InputLabelStyle}>Title</Text>
-                    <TextInput
+                    <View className="">
+                        { toggle.title ? 
+                            <Text className={InputLabelStyle}>Title</Text> :
+                            <Text className={InputLabelStyle}>Title</Text>
+                        }
+                        <Pressable
+                            onPress={() => {
+                                toggle.title = !toggle.title
+                                setToggle({ ...toggle })
+                            }}
+                            className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
+                        >
+                            <Text className="font-semibold text-xl">TOGGLE</Text>
+                        </Pressable>
+                    </View>
+                    { toggle.title && <TextInput
                         onChange={(e) => {
                             createData.title = e.nativeEvent.text;
                             setCreateData({ ...createData });
@@ -66,7 +94,7 @@ const CreateEvent = () => {
                         className={`${InputStyle}`}
                     >
                         {createData.title}
-                    </TextInput>
+                    </TextInput> }
 
                     <Text className={InputLabelStyle}>Tagline</Text>
                     <TextInput
