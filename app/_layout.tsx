@@ -4,6 +4,7 @@ import { Link } from 'expo-router';
 import { Fragment } from 'react';
 import { Entypo } from '@expo/vector-icons';
 import { API } from '../lib/utils';
+import Constants from 'expo-constants'
 
 const HeaderIcon = () => {
     return (
@@ -23,7 +24,8 @@ const HeaderLeft = ({ props }: any) => {
     );
 };
 
-export const call = new API("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");
+export const call = new API("");
+console.log(process.env.GITHUB_TOKEN)
 
 const StackLayout = () => {
     return (

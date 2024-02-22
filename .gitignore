@@ -15,6 +15,7 @@ web-build/
 *.p12
 *.key
 *.mobileprovision
+app.json
 
 # Metro
 .metro-health-check*
@@ -30,6 +31,7 @@ yarn-error.*
 
 # local env files
 .env*.local
+.env
 
 # typescript
 *.tsbuildinfo

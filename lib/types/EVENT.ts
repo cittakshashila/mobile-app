@@ -12,12 +12,11 @@ type DETAIL = {
 
 export type EVENT = {
     title: string,
-    tagline: string,
     description: string,
     rules: Array<string>,
     details: DETAIL,
     prizes: Array<string>,
-    contacts: Array<CONTACT>
-    links: Array<string>,
-    fee: number
+    contacts: Array<CONTACT>,
+    registration: Array<string>,
+    guidelines: Array<string>
 }
