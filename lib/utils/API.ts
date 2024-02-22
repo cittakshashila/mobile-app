@@ -35,6 +35,7 @@ export class G_API {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             })
+            console.log(res);
             if (res.status !== 200) return { success: false, message: `Failed to create event: ${res.status}` }
             return { success: true, message: `Event ${data.title} created successfully`, data: res.data };
         } else {
