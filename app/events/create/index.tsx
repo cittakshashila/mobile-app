@@ -2,14 +2,11 @@ import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "reac
 import { EVENT_TYPE } from "../../../lib/types";
 import { useState } from "react";
 import SelectDropdown from 'react-native-select-dropdown'
-import { useRouter } from "expo-router";
-import { call } from "../../_layout";
-import { octokit } from "../../../lib/utils";
-import { REPO_NAME, REPO_OWNER } from "../../../lib/constants";
 
 const CreateEvent = () => {
 
     const defaultData: EVENT_TYPE = {
+        "id": "",
         "title": "",
         "description": "",
         "rules": [],
@@ -21,10 +18,11 @@ const CreateEvent = () => {
         "prizes": [],
         "contacts": [],
         "guidelines": [],
-        "registration": []
+        "registration": [],
+        "glink": "",
+        "day": "DAY1",
+        "category": "GEN"
     }
-
-    const router = useRouter();
 
     const [createData, setCreateData] = useState<EVENT_TYPE>(defaultData);
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
@@ -39,6 +37,9 @@ const CreateEvent = () => {
         guidelines: boolean,
         registration: boolean,
         contacts: boolean,
+        glink: boolean,
+        day: "DAY1" | "DAY2" | "DAY3", // a
+        category: "GEN" | "WK" | "PRO"
     }>({
         title: true,
         description: true,
@@ -46,6 +47,9 @@ const CreateEvent = () => {
         guidelines: true,
         registration: true,
         contacts: true,
+        glink: true,
+        day: "DAY1",
+        category: "GEN"
     })
 
     const handleCreate = async () => {
@@ -79,19 +83,23 @@ const CreateEvent = () => {
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
                 <View className="m-2">
-                    { toggle.title ? 
-                        <Text className={InputLabelStyle}>Title</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Title</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.title = !toggle.title
-                            setToggle({ ...toggle })
-                        }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
-                    >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
-                    </Pressable>
+                    <View>
+                        { toggle.title ? 
+                            <Text className={InputLabelStyle}>Title</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Title</Text>
+                        }
+                        <Pressable
+                            onPress={() => {
+                                toggle.title = !toggle.title
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            { toggle.title ? 
+                                <Text className="font-bold text-3xl">{'^'}</Text> :
+                                <Text className="font-bold text-3xl">{'v'}</Text>
+                            }
+                        </Pressable>
+                    </View>
                     { toggle.title && <TextInput
                         onChange={(e) => {
                             createData.title = e.nativeEvent.text;
@@ -111,9 +119,11 @@ const CreateEvent = () => {
                             toggle.description = !toggle.description
                             setToggle({ ...toggle })
                         }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                     >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
+                        { toggle.description ? 
+                            <Text className="font-bold text-3xl">{'^'}</Text> :
+                            <Text className="font-bold text-3xl">{'v'}</Text>
+                        }
                     </Pressable>
                     { toggle.description && <TextInput
                         onChange={(e) => {
@@ -136,9 +146,11 @@ const CreateEvent = () => {
                             toggle.registration = !toggle.registration
                             setToggle({ ...toggle })
                         }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                     >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
+                        { toggle.registration ? 
+                            <Text className="font-bold text-3xl">{'^'}</Text> :
+                            <Text className="font-bold text-3xl">{'v'}</Text>
+                        }
                     </Pressable>
                     { toggle.registration && createData.registration.map((reg, reg_idx) => (
                         <View key={reg_idx} className="flex flex-row items-center">
@@ -181,9 +193,11 @@ const CreateEvent = () => {
                             toggle.rules = !toggle.rules
                             setToggle({ ...toggle })
                         }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                     >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
+                        { toggle.rules ? 
+                            <Text className="font-bold text-3xl">{'^'}</Text> :
+                            <Text className="font-bold text-3xl">{'v'}</Text>
+                        }
                     </Pressable>
                     { toggle.rules && createData.rules.map((rule, rule_idx) => (
                         <View key={rule_idx} className="flex flex-row items-center">
@@ -226,9 +240,11 @@ const CreateEvent = () => {
                             toggle.guidelines = !toggle.guidelines
                             setToggle({ ...toggle })
                         }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                     >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
+                        { toggle.guidelines ? 
+                            <Text className="font-bold text-3xl">{'^'}</Text> :
+                            <Text className="font-bold text-3xl">{'v'}</Text>
+                        }
                     </Pressable>
                     { toggle.guidelines && createData.guidelines.map((g, i) => (
                         <View key={i} className="flex flex-row items-center">
@@ -267,7 +283,7 @@ const CreateEvent = () => {
                         <View>
                             <Text className="text-[16px] font-black mb-1">Type</Text>
                             <SelectDropdown
-                                data={["TECHNICAL", "NON-TECHNICAL"]}
+                                data={["TECHNICAL", "NON-TECHNICAL", "WORKSHOP", "ONLINE EVENT", "PRO SHOW"]}
                                 defaultButtonText={createData.details.type}
                                 buttonStyle={{ justifyContent: "flex-start", width: "100%", backgroundColor: "rgb(243 244 246)", borderWidth: 2, borderColor: "black", borderRadius: 5 }}
                                 buttonTextStyle={{ color: "black", textAlign: "left" }}
@@ -275,6 +291,9 @@ const CreateEvent = () => {
                                 rowStyle={{ marginBottom: 2, height: 50, backgroundColor: "rgb(243 244 246)", borderColor: "black", borderWidth: 2, borderBottomColor: "black", borderBottomWidth: 2, borderRadius: 5 }}
                                 rowTextStyle={{ color: "black", textAlign: "left" }}
                                 onSelect={(selectedItem) => {
+                                    createData.category = ["TECHNICAL", "NON-TECHNICAL", "ONLINE EVENT"].includes(selectedItem) ? "GEN": selectedItem == "PRO SHOW" ? "PRO": "WK"
+                                    setCreateData({ ...createData })
+
                                     createData.details.type = selectedItem;
                                     setCreateData({ ...createData });
                                 }}
@@ -293,9 +312,11 @@ const CreateEvent = () => {
                             toggle.contacts = !toggle.contacts
                             setToggle({ ...toggle })
                         }}
-                        className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                     >
-                        <Text className="font-semibold text-xl">{ 'O' }</Text>
+                        { toggle.contacts ? 
+                            <Text className="font-bold text-3xl">{'^'}</Text> :
+                            <Text className="font-bold text-3xl">{'v'}</Text>
+                        }
                     </Pressable>
                     <View>
                         { toggle.contacts && createData.contacts.map((contact, contact_idx) => (
@@ -352,6 +373,31 @@ const CreateEvent = () => {
                         >
                             <Text className="font-semibold text-xl">+</Text>
                         </Pressable> }
+                        { createData.details.type == "ONLINE EVENT" ? 
+                            <View>{ toggle.glink ? 
+                                <Text className={InputLabelStyle}>Google Link</Text> :
+                                <Text className={InputLabelStyle + ' italic line-through '}>Google Link</Text>
+
+                            }
+                            <Pressable
+                                onPress={() => {
+                                    toggle.glink = !toggle.glink
+                                    setToggle({ ...toggle })
+                                }}
+                                className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
+                            >
+                                <Text className="font-semibold text-xl">{ 'O' }</Text>
+                            </Pressable>
+                            { toggle.glink && <TextInput
+                                onChange={(e) => {
+                                    createData.title = e.nativeEvent.text;
+                                    setCreateData({ ...createData });
+                                }}
+                                className={`${InputStyle}`}
+                            >
+                                {createData.title}
+                            </TextInput> }</View>
+                        : null }
                     </View>
 
                 </View>

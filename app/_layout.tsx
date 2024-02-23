@@ -1,10 +1,9 @@
 import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import { Stack } from 'expo-router';
+import { Stack, Tabs, useRouter } from 'expo-router';
 import { Link } from 'expo-router';
-import { Fragment } from 'react';
-import { Entypo } from '@expo/vector-icons';
+import { Fragment, useEffect } from 'react';
 import { API } from '../lib/utils';
-import Constants from 'expo-constants'
+import { useEventStore } from '../lib/store';
 
 const HeaderIcon = () => {
     return (
@@ -25,9 +24,23 @@ const HeaderLeft = ({ props }: any) => {
 };
 
 export const call = new API("");
-console.log(process.env.GITHUB_TOKEN)
+
+function SettingsScreen() {
+    return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <Text>Settings!</Text>
+        </View>
+    );
+}
 
 const StackLayout = () => {
+    const useEvent = useEventStore((state) => state.event);
+    const router = useRouter();
+    useEffect(() => {
+        if (useEvent) {
+            router.push("/events" as `http${string}`);
+        }
+    }, [])
     return (
         <Fragment>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -40,8 +53,7 @@ const StackLayout = () => {
                     <Stack.Screen name="index" />
                     <Stack.Screen name="events/index" />
                     <Stack.Screen name="events/create/index" options={{}} />
-                    <Stack.Screen name="events/[name]/index" />
-                    <Stack.Screen name="events/[name]/edit/index" options={{}} />
+                    <Stack.Screen name="events/[name]/(tabs)" />
                 </Stack>
             </SafeAreaView>
         </Fragment>

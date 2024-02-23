@@ -1,7 +1,6 @@
 import axios, { Axios, AxiosResponse } from 'axios';
 import { REPO_NAME, REPO_OWNER } from '../constants';
 import { API_TYPE, EVENT_TYPE } from '../types';
-// import { encode } from 'js-base64';
 
 export class G_API {
     private API: Axios;
@@ -35,6 +34,7 @@ export class G_API {
                     'X-GitHub-Api-Version': '2022-11-28'
                 }
             })
+            console.log(res);
             if (res.status !== 200) return { success: false, message: `Failed to create event: ${res.status}` }
             return { success: true, message: `Event ${data.title} created successfully`, data: res.data };
         } else {
