@@ -26,17 +26,13 @@
     },
     "web": {
       "bundler": "metro",
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
-"plugins": [
-    [
-      "expo-router",
-      {
-        "origin": "https://evanbacon.dev"
-      }
-    ]
-  ],
+    "plugins": [
+      ["expo-router", { "origin": "https://evanbacon.dev" }],
+      ["expo-image-picker", { "photosPermission": "The app accesses your photos to create event photos" }]
+    ],
     "experiments": {
       "typedRoutes": true
     }
