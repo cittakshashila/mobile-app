@@ -1,6 +1,7 @@
 import { ExpoRequest, ExpoResponse } from "expo-router/server";
 import { call } from "../../_layout";
 
+export const revalidate = 1;
 export async function PUT(req: ExpoRequest): Promise<ExpoResponse> {
     const { event_name, event_data, type } = await req.json();
     try {
