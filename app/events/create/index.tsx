@@ -4,6 +4,7 @@ import { useState } from "react";
 import SelectDropdown from 'react-native-select-dropdown'
 import * as ImagePicker from 'expo-image-picker';
 import { useRouter } from "expo-router";
+import { useEventStore } from "../../../lib/store";
 
 const CreateEvent = () => {
     const router = useRouter()
@@ -32,6 +33,8 @@ const CreateEvent = () => {
 
     const [imageIN, setImageIN] = useState<string | null>(null);
     const [imageOUT, setImageOUT] = useState<string | null>(null);
+
+    const { event } = useEventStore()
 
     const pickImageIN = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -92,6 +95,7 @@ const CreateEvent = () => {
             const res = await fetch("/api/event/PUT" as `http${string}`, {
                 method: "PUT",
                 body: JSON.stringify({
+                    token: event?.token,
                     event_name: createData.id,
                     event_data: createData,
                     type: "CREATE"

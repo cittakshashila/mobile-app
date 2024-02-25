@@ -10,7 +10,7 @@ import { useGlobalSearchParams } from 'expo-router';
 
 const List = () => {
     const [data, setData] = useState<Array<USER_TYPE> | null>(null);
-    const {event, setEvent} = useEventStore()
+    const { event } = useEventStore()
     const params = useGlobalSearchParams()
 
     const copyToClipboard = (text: string) => {
@@ -21,7 +21,7 @@ const List = () => {
     const truncate = (text: string, limit: number) => text.length > limit ? `${text.substring(0, limit)}...` : text;
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await axios.get(`${API_URL}/admin//${params.name}`, {
+            const { data } = await axios.get(`${API_URL}/admin/${params.name}`, {
                 headers: {
                     Authorization: `Bearer ${event.token}`
                 }
