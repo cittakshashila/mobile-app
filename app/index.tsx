@@ -2,6 +2,8 @@ import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native"
 import { useState } from "react";
 import { useEventStore } from "../lib/store";
 import { useRouter } from "expo-router";
+import { API_URL } from "../lib/constants";
+import axios from "axios";
 
 const Main = () => {
     const [UID, setUID] = useState<string>();
@@ -15,13 +17,12 @@ const Main = () => {
             setError("Please fill all fields");
             return;
         }
-        // const { data } = await axios.post(API_URL + '/admin/login', {
-        //     data: {
-        //         uname: UID,
-        //         password: pwd
-        //     }
-        // });
-        setEventStore({ isAdmin: true, event: ["BGMIA", "BINSY"] })
+        console.log(API_URL + '/admin/event/login')
+        const { data } = await axios.post(API_URL + '/admin/event/login', {
+            admin_id: UID,
+            password: pwd
+        });
+        setEventStore({ token: data.body.token , isAdmin: data.body.isAdmin, event: data.body.event })
         router.push("/events");
         // console.log(data);
     }

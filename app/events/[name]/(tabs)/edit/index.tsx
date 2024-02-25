@@ -9,7 +9,6 @@ import { Loading } from '../../../../../lib/components';
 import * as ImagePicker from 'expo-image-picker';
 
 const EditEvent = () => {
-
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
 
     const router = useRouter();
@@ -30,8 +29,6 @@ const EditEvent = () => {
         registration: boolean,
         contacts: boolean,
         glink: boolean,
-        day: "DAY1" | "DAY2" | "DAY3", // a
-        category: "GEN" | "WK" | "PRO"
     }>({
         title: true,
         description: true,
@@ -40,8 +37,6 @@ const EditEvent = () => {
         registration: true,
         contacts: true,
         glink: true,
-        day: "DAY1",
-        category: "GEN"
     })
 
     const params = useGlobalSearchParams();
@@ -87,10 +82,12 @@ const EditEvent = () => {
 
     const handleSave = async () => {
         if (buttonType == "CONFIRM") {
+            console.log(createData)
             const res = await fetch("/api/event/PUT" as `http${string}`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    event_data: data,
+                    event_name: params.name,
+                    event_data: createData,
                     type: "UPDATE"
                 })
             })
@@ -105,6 +102,18 @@ const EditEvent = () => {
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
                 <View className="m-2">
+                    <View className="m-2">
+                        <Text className={InputLabelStyle}>ID</Text> 
+                        <TextInput
+                            onChange={(e) => {
+                                createData.id = e.nativeEvent.text;
+                                setCreateData({ ...createData });
+                            }}
+                            className={`${InputStyle}`}
+                        >
+                            {createData.id}
+                        </TextInput>
+                    </View>
                     <View>
                         {toggle.title ?
                             <Text className={InputLabelStyle}>Title</Text> :
@@ -406,9 +415,10 @@ const EditEvent = () => {
                                         toggle.glink = !toggle.glink
                                         setToggle({ ...toggle })
                                     }}
-                                    className="w-8 h-8 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
                                 >
-                                    <Text className="font-semibold text-xl">{'O'}</Text>
+                                    { toggle.glink ? <Text className="font-semibold text-xl">{'^'}</Text> : 
+                                        <Text className="font-semibold text-xl">{'^'}</Text>
+                                    }
                                 </Pressable>
                                 {toggle.glink && <TextInput
                                     onChange={(e) => {

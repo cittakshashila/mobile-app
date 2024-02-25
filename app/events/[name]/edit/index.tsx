@@ -9,7 +9,6 @@ import { EVENT_TYPE } from '../../../../lib/types';
 import { Loading } from '../../../../lib/components';
 
 const EditEvent = () => {
-
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
     const [tempData, setTempData] = useState<string>("");
     const [data, setData] = useState<EVENT_TYPE | null>(null);
@@ -43,7 +42,7 @@ const EditEvent = () => {
             const res = await fetch("/api/event/PUT" as `http${string}`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    event_name: JSON.parse(tempData).title,
+                    event_name: JSON.parse(tempData).id,
                     event_data: data,
                     type: "UPDATE"
                 })

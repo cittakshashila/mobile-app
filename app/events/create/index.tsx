@@ -3,8 +3,10 @@ import { EVENT_TYPE } from "../../../lib/types";
 import { useState } from "react";
 import SelectDropdown from 'react-native-select-dropdown'
 import * as ImagePicker from 'expo-image-picker';
+import { useRouter } from "expo-router";
 
 const CreateEvent = () => {
+    const router = useRouter()
 
     const defaultData: EVENT_TYPE = {
         "id": "",
@@ -66,8 +68,6 @@ const CreateEvent = () => {
         registration: boolean,
         contacts: boolean,
         glink: boolean,
-        day: "DAY1" | "DAY2" | "DAY3", // a
-        category: "GEN" | "WK" | "PRO"
     }>({
         title: true,
         description: true,
@@ -76,8 +76,6 @@ const CreateEvent = () => {
         registration: true,
         contacts: true,
         glink: true,
-        day: "DAY1",
-        category: "GEN"
     })
 
     const handleCreate = async () => {
@@ -89,20 +87,21 @@ const CreateEvent = () => {
             }
 
             setCreateData({ ...createData })
+            console.log(createData)
 
-            // const res = await fetch("/api/event/PUT" as `http${string}`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({
-            //         event_name: createData.title,
-            //         event_data: createData,
-            //         type: "CREATE"
-            //     })
-            // })
-            // const data = await res.json();
-            // console.log(data);
-            // router.push(`/events` as `http${string}`);
-            // setCreateData(defaultData);
-            // return;
+            const res = await fetch("/api/event/PUT" as `http${string}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    event_name: createData.id,
+                    event_data: createData,
+                    type: "CREATE"
+                })
+            })
+            const data = await res.json();
+            console.log(data);
+            router.push(`/events` as `http${string}`);
+            setCreateData(defaultData);
+            return;
         }
         setButtonType("CONFIRM");
     }
@@ -110,6 +109,18 @@ const CreateEvent = () => {
     return (
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
+                <View className="m-2">
+                    <Text className={InputLabelStyle}>ID</Text> 
+                    <TextInput
+                        onChange={(e) => {
+                            createData.id = e.nativeEvent.text;
+                            setCreateData({ ...createData });
+                        }}
+                        className={`${InputStyle}`}
+                    >
+                        {createData.id}
+                    </TextInput>
+                </View>
                 <View className="m-2">
                     <View>
                         {toggle.title ?

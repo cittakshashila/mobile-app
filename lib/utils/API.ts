@@ -38,8 +38,13 @@ export class G_API {
             if (res.status !== 200) return { success: false, message: `Failed to create event: ${res.status}` }
             return { success: true, message: `Event ${data.title} created successfully`, data: res.data };
         } else {
-            const resp = await this.API.get(API_URL.split('/info.json')[0]);
-            console.log(API_URL);
+            console.log(EVENT_NAME, EVENT_MODE, "-------------------------------")
+            console.log('rahul kabodi')
+            const resp = await this.API.get(API_URL);
+            console.log('rahul thaioli')
+
+            console.log(resp);
+
             if (resp.status !== 200) return { success: false, message: `Failed to create event: ${resp.status}` }
             const updatedFileContent = {
                 ...resp.data,

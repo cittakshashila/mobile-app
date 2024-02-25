@@ -4,6 +4,7 @@ import Event from "../../app/events";
 type Event = {
     isAdmin: boolean;
     event: Array<string>;
+    token: string;
 }
 
 type EventState = {
