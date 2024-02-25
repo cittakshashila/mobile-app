@@ -102,19 +102,7 @@ const EditEvent = () => {
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
                 <View className="m-2">
-                    <View className="m-2">
-                        <Text className={InputLabelStyle}>ID</Text> 
-                        <TextInput
-                            onChange={(e) => {
-                                createData.id = e.nativeEvent.text;
-                                setCreateData({ ...createData });
-                            }}
-                            className={`${InputStyle}`}
-                        >
-                            {createData.id}
-                        </TextInput>
-                    </View>
-                    <View>
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.title ?
                             <Text className={InputLabelStyle}>Title</Text> :
                             <Text className={InputLabelStyle + ' italic line-through '}>Title</Text>
@@ -126,8 +114,8 @@ const EditEvent = () => {
                             }}
                         >
                             {toggle.title ?
-                                <Text className="font-bold text-3xl">{'^'}</Text> :
-                                <Text className="font-bold text-3xl">{'v'}</Text>
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
                             }
                         </Pressable>
                     </View>
@@ -141,21 +129,23 @@ const EditEvent = () => {
                         {createData.title}
                     </TextInput>}
 
-                    {toggle.description ?
-                        <Text className={InputLabelStyle}>Description</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Description</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.description = !toggle.description
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="w-full flex flex-row items-center justify-between">
                         {toggle.description ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Description</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Description</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.description = !toggle.description
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.description ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.description && <TextInput
                         onChange={(e) => {
                             createData.description = e.nativeEvent.text;
@@ -168,21 +158,23 @@ const EditEvent = () => {
                         {createData.description}
                     </TextInput>}
 
-                    {toggle.registration ?
-                        <Text className={InputLabelStyle}>Registration</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Registration</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.registration = !toggle.registration
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="w-full flex flex-row items-center justify-between">
                         {toggle.registration ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Registration</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Registration</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.registration = !toggle.registration
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.registration ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.registration && createData.registration.map((reg, reg_idx) => (
                         <View key={reg_idx} className="flex flex-row items-center">
                             <TextInput
@@ -215,21 +207,23 @@ const EditEvent = () => {
                         <Text className="font-semibold text-xl">+</Text>
                     </Pressable>}
 
-                    {toggle.rules ?
-                        <Text className={InputLabelStyle}>Rules</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Rules</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.rules = !toggle.rules
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="w-full flex flex-row items-center justify-between">
                         {toggle.rules ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Rules</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Rules</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.rules = !toggle.rules
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.rules ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.rules && createData.rules.map((rule, rule_idx) => (
                         <View key={rule_idx} className="flex flex-row items-center">
                             <TextInput
@@ -262,21 +256,23 @@ const EditEvent = () => {
                         <Text className="font-semibold text-xl">+</Text>
                     </Pressable>}
 
-                    {toggle.guidelines ?
-                        <Text className={InputLabelStyle}>Guidelines</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Guidelines</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.guidelines = !toggle.guidelines
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="w-full flex flex-row items-center justify-between">
                         {toggle.guidelines ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Guidelines</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Guidelines</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.guidelines = !toggle.guidelines
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.guidelines ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {createData.guidelines && toggle.guidelines && createData.guidelines.map((g, i) => (
                         <View key={i} className="flex flex-row items-center">
                             <TextInput
@@ -334,21 +330,23 @@ const EditEvent = () => {
                         <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
                     </View>
 
-                    {toggle.contacts ?
-                        <Text className={InputLabelStyle}>Contacts</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Contacts</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.contacts = !toggle.contacts
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="w-full flex flex-row items-center justify-between">
                         {toggle.contacts ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Contacts</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Contacts</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.contacts = !toggle.contacts
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.contacts ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     <View>
                         {toggle.contacts && createData.contacts.map((contact, contact_idx) => (
                             <View key={contact_idx} className="mb-2 bg-gray-200 p-4 rounded-md">
@@ -416,8 +414,9 @@ const EditEvent = () => {
                                         setToggle({ ...toggle })
                                     }}
                                 >
-                                    { toggle.glink ? <Text className="font-semibold text-xl">{'^'}</Text> : 
-                                        <Text className="font-semibold text-xl">{'^'}</Text>
+                                    {toggle.glink ?
+                                        <Text className="font-bold text-xl">&uarr;</Text> :
+                                        <Text className="font-bold text-xl">&darr;</Text>
                                     }
                                 </Pressable>
                                 {toggle.glink && <TextInput

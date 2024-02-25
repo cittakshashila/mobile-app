@@ -10,7 +10,7 @@ import { useGlobalSearchParams } from 'expo-router';
 
 const List = () => {
     const [data, setData] = useState<Array<USER_TYPE> | null>(null);
-    const {event, setEvent} = useEventStore()
+    const { event, setEvent } = useEventStore()
     const params = useGlobalSearchParams()
 
     const copyToClipboard = (text: string) => {
@@ -21,7 +21,7 @@ const List = () => {
     const truncate = (text: string, limit: number) => text.length > limit ? `${text.substring(0, limit)}...` : text;
     useEffect(() => {
         const fetchData = async () => {
-            const { data } = await axios.get(`${API_URL}/admin//${params.name}`, {
+            const { data } = await axios.get(`${API_URL}/admin/get-users/${params.name}`, {
                 headers: {
                     Authorization: `Bearer ${event.token}`
                 }
@@ -31,10 +31,11 @@ const List = () => {
         fetchData()
     }, [])
     if (!data) return <Loading />
+    if (data.length === 0) return <View className="w-full h-full flex flex-col items-center justify-center"><Text className="text-[30px] text-center">No data found</Text></View>
     return (
         <ScrollView>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#f0f0f0' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#f0f0f0', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Name</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Phone</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Email</Text>
@@ -47,7 +48,7 @@ const List = () => {
                             <Text style={{ textAlign: 'center' }}>{truncate(user.name, 10)}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(user.phone_no)}>
-                            <Text style={{ textAlign: 'center' }}>{truncate(user.phone_no, 10)}</Text>
+                            <Text style={{ textAlign: 'center' }}>{truncate(user.phone_no, 6)}</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(user.email)}>
                             <Text style={{ textAlign: 'center' }}>{truncate(user.email, 6)}</Text>
