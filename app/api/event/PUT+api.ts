@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken"
 import { TOKEN_SECRET } from "../../../lib/constants";
 import { useEventStore } from "../../../lib/store";
 
+export const revalidate = 1;
 export async function PUT(req: ExpoRequest): Promise<ExpoResponse> {
     const { event_name, event_data, type, token } = await req.json();
 
