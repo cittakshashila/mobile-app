@@ -5,9 +5,10 @@ import { PARSE } from "../../../../lib/utils";
 import { EVENT_TYPE } from "../../../../lib/types";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { Loading } from "../../../../lib/components";
+import { useEventStore } from "../../../../lib/store";
 
 const event = () => {
-
+    const { event } = useEventStore()
     const [data, setData] = useState<EVENT_TYPE | null>(null);
     const [buttonType, setButtonType] = useState<"DELETE" | "CONFIRM">("DELETE");
 
@@ -24,16 +25,26 @@ const event = () => {
         }
         CALL();
     }, [])
-    if (!data) return <Loading />
+
     const handleDelete = async () => {
         if (buttonType === "CONFIRM") {
-            // TODO: DELETE
+            // const res = await fetch("/api/event/PUT" as `http${string}`, {
+            //     method: "PUT",
+            //     body: JSON.stringify({
+            //         token: event?.token,
+            //         event_name: params.name,
+            //         type: "DELETE"
+            //     })
+            // })
             router.push("/events" as `http${string}`);
             return;
         }
         setButtonType("CONFIRM");
         return;
     }
+
+    if (!data) return <Loading />
+
     return (
         <SafeAreaView className="w-full h-full px-2 flex flex-col items-center justify-center">
             <ScrollView className="px-4 p w-full">

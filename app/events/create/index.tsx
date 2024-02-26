@@ -101,6 +101,7 @@ const CreateEvent = () => {
                     type: "CREATE"
                 })
             })
+
             const data = await res.json();
             console.log(data);
             router.push(`/events` as `http${string}`);
