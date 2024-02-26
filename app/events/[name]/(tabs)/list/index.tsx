@@ -23,10 +23,11 @@ const List = () => {
         const fetchData = async () => {
             const { data } = await axios.get(`${API_URL}/admin/get-users/${params.name}`, {
                 headers: {
-                    Authorization: `Bearer ${event.token}`
+                    Authorization: `Bearer ${event?.token}`
                 }
             })
             setData(data.body.data)
+            console.log(data.body.data)
         }
         fetchData()
     }, [])
@@ -41,6 +42,7 @@ const List = () => {
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Email</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>College</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Attended</Text>
+                    <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Paid</Text>
                 </View>
                 {data.map((user, user_idx) => (
                     <View key={user_idx} style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
@@ -58,6 +60,9 @@ const List = () => {
                         </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(user.is_present ? "true" : "false")}>
                             <Text style={{ textAlign: 'center' }}>{truncate(user.is_present ? "true" : "false", 6)}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(user.paid ? "true" : "false")}>
+                            <Text style={{ textAlign: 'center' }}>{truncate(user.paid ? "true" : "false", 6)}</Text>
                         </TouchableOpacity>
                     </View>
                 ))}

@@ -6,10 +6,13 @@ import { PARSE } from '../../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../../lib/types';
 import { Loading, SmallLoading } from '../../../../../lib/components';
 import { useEventStore } from '../../../../../lib/store';
+import axios from 'axios';
+import { API_URL } from '../../../../../lib/constants';
 
 const EditEvent = () => {
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" >("DAY1");
 
     const router = useRouter();
     const { event } = useEventStore()
@@ -38,13 +41,19 @@ const EditEvent = () => {
 
     const params = useGlobalSearchParams();
 
+    const handleDateSet = (d: "DAY1" | "DAY2" | "DAY3") => {
+        createData.details.date = d
+        createData.day = d
+        setCreateData({ ...createData })
+        setDate(d)
+    }
+
     useEffect(() => {
         const CALL = async () => {
-            console.log(params.name);
             const res = await fetch("/api/event/" + params.name as `http${string}`);
             const D = await res.json();
-            console.log(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
             setCreateData(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
+            setDate(PARSE(D.payload.blob.rawLines).day)
         }
         CALL();
     }, [])
@@ -56,6 +65,18 @@ const EditEvent = () => {
         if (buttonType == "CONFIRM") {
             setIsLoading(true);
             try {
+                const { data } = await axios.put(`${API_URL}/events`, {
+                    event_id: createData.id,
+                    name: createData.title,
+                    fee: createData.category === "GEN" ? 0 : 200,
+                    pass_id: createData.day
+                }, {
+                    headers: { Authorization: `Bearer ${event?.token}` }
+                })
+            } catch (err) {
+            }
+
+            try {
                 const res = await fetch("/api/event/PUT" as `http${string}`, {
                     method: "PUT",
                     body: JSON.stringify({
@@ -65,8 +86,7 @@ const EditEvent = () => {
                         type: "UPDATE"
                     })
                 })
-                console.log(res);
-                router.push(`/events/${params.name}` as `http${string}`);
+                router.push(`/events` as `http${string}`);
                 return;
             } catch (e) {
                 Alert.alert("Error", "Something went wrong");
@@ -307,7 +327,17 @@ const EditEvent = () => {
                             />
                         </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Date</Text>
-                        <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
+                        <View className="flex flex-row items-center justify-between">
+                            <Pressable onPress={() => handleDateSet("DAY1")} className={`w-1/4 h-14 ${date === 'DAY1' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY1</Text>
+                            </Pressable>
+                            <Pressable onPress={() => handleDateSet("DAY2")} className={`w-1/4 h-14 ${date === 'DAY2' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY2</Text>
+                            </Pressable>
+                            <Pressable onPress={() => handleDateSet("DAY3")} className={`w-1/4 h-14 ${date === 'DAY3' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY3</Text>
+                            </Pressable>
+                        </View>
                     </View>
 
                     <View className="w-full flex flex-row items-center justify-between">

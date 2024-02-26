@@ -23,7 +23,7 @@ const HeaderLeft = ({ props }: any) => {
     );
 };
 
-export const call = new API("");
+export const call = new API("YOUR TOKEN GOES HERE");
 
 function SettingsScreen() {
     return (
@@ -36,6 +36,7 @@ function SettingsScreen() {
 const StackLayout = () => {
     const useEvent = useEventStore((state) => state.event);
     const router = useRouter();
+
     useEffect(() => {
         if (useEvent) {
             router.push("/events" as `http${string}`);

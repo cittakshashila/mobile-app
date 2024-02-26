@@ -19,7 +19,6 @@ const event = () => {
         const CALL = async () => {
             const res = await fetch("/api/event/" + params.name as `http${string}`);
             const data = await res.json();
-            console.log(data);
             setData(PARSE(data.payload.blob.rawLines) as EVENT_TYPE);
         }
         CALL();

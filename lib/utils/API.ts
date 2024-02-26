@@ -21,6 +21,7 @@ export class G_API {
 
 
         if (EVENT_MODE === "CREATE") {
+            console.log(2)
             let json = JSON.stringify(data, null, 2);
             const r = await fetch(`https://github.com/${REPO_OWNER}/EVENTS-DATA-24/blob/master/info.json`);
             const D = await r.json();
@@ -155,6 +156,7 @@ export class G_API {
 
         } 
         if (EVENT_MODE === "CREATE IMAGE") {
+            console.log(3)
             const json = IMG.img
             try {
                 const createdFileContent = {
