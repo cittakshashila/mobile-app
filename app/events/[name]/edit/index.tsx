@@ -1,9 +1,8 @@
 import SelectDropdown from 'react-native-select-dropdown'
-// import DateTimePicker from '@react-native-community/datetimepicker';
+import * as FileSystem from 'expo-file-system';
 import { useEffect, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
-import { INFO_URL } from '../../../../lib/constants';
 import { PARSE } from '../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../lib/types';
 import { Loading } from '../../../../lib/components';

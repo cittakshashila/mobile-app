@@ -1,12 +1,10 @@
 import SelectDropdown from 'react-native-select-dropdown'
-// import DateTimePicker from '@react-native-community/datetimepicker';
 import { useEffect, useState } from 'react';
-import { Button, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { PARSE } from '../../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../../lib/types';
 import { Loading } from '../../../../../lib/components';
-import * as ImagePicker from 'expo-image-picker';
 import { useEventStore } from '../../../../../lib/store';
 
 const EditEvent = () => {
@@ -18,9 +16,6 @@ const EditEvent = () => {
     const InputLabelStyle = "text-xl font-black mt-2";
 
     const [createData, setCreateData] = useState<EVENT_TYPE | null>(null);
-
-    const [imageIN, setImageIN] = useState<string | null>(null);
-    const [imageOUT, setImageOUT] = useState<string | null>(null);
 
     const [toggle, setToggle] = useState<{
         title: boolean,
@@ -52,31 +47,6 @@ const EditEvent = () => {
         }
         CALL();
     }, [])
-
-
-    const pickImageIN = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-        if (!result.canceled) {
-            setImageIN(result.assets[0].uri);
-        }
-    };
-
-    const pickImageOUT = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-        if (!result.canceled) {
-            setImageOUT(result.assets[0].uri);
-        }
-    };
 
 
     if (!createData) return <Loading />
@@ -432,16 +402,6 @@ const EditEvent = () => {
                                 </TextInput>}
                             </View>
                             : null}
-                        <View className="mt-4">
-                            <View className={InputStyle} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                <Button title="PICK 'IN' IMAGE" onPress={pickImageIN} />
-                                {imageIN && <Image source={{ uri: imageIN }} style={{ width: 200, height: 200 }} />}
-                            </View>
-                            <View className={InputStyle + " mt-4"} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                                <Button title="PICK 'OUT' IMAGE" onPress={pickImageOUT} />
-                                {imageOUT && <Image source={{ uri: imageOUT }} style={{ width: 200, height: 200 }} />}
-                            </View>
-                        </View>
                     </View>
 
                 </View>

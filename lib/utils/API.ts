@@ -15,18 +15,18 @@ export class G_API {
             }
         })
     }
-    public event = async (EVENT_NAME: string, data: EVENT_TYPE, EVENT_MODE: "CREATE" | "UPDATE" = "CREATE"): Promise<API_TYPE> => {
+    public event = async (EVENT_NAME: string, data: EVENT_TYPE , EVENT_MODE: "CREATE" | "UPDATE" | "CREATE IMAGE" = "CREATE", IMG: { img: string, num: number } = { img:"", num:0 }): Promise<API_TYPE> => {
         const API_URL = `/${REPO_OWNER}/${REPO_NAME}/contents/events/${EVENT_NAME}/info.json`;
         const MAIN_URL = `/${REPO_OWNER}/${REPO_NAME}/contents/info.json`;
 
-        let json = JSON.stringify(data, null, 2);
-
-        const r = await fetch(`https://github.com/${REPO_OWNER}/EVENTS-DATA-24/blob/master/info.json`);
-        const D = await r.json();
-
-        let mainData = PARSE(D.payload.blob.rawLines)
 
         if (EVENT_MODE === "CREATE") {
+            let json = JSON.stringify(data, null, 2);
+            const r = await fetch(`https://github.com/${REPO_OWNER}/EVENTS-DATA-24/blob/master/info.json`);
+            const D = await r.json();
+
+            let mainData = PARSE(D.payload.blob.rawLines)
+
             let newMainData = {}
             newMainData[data.id] = {
                 name: data.title,
@@ -84,7 +84,14 @@ export class G_API {
             }
 
             return { success: true, message: `Event ${data.title} created successfully` };
-        } else if (EVENT_MODE === "UPDATE") {
+        } 
+        if (EVENT_MODE === "UPDATE") {
+            let json = JSON.stringify(data, null, 2);
+            const r = await fetch(`https://github.com/${REPO_OWNER}/EVENTS-DATA-24/blob/master/info.json`);
+            const D = await r.json();
+
+            let mainData = PARSE(D.payload.blob.rawLines)
+
             mainData[data.id].name = data.title
             mainData[data.id].type = data.details.type
             mainData[data.id].date = data.day === "DAY1" ? "29/02/2024": (data.day === "DAY2" ? "01/03/2024": "02/03/2024")
@@ -146,21 +153,29 @@ export class G_API {
 
             return { success: true, message: `Event ${data.title} updated successfully` };
 
-        } else {
-            const response = await this.API.get(API_URL)
-            if (response.status !== 200) return { success: false, message: `Failed to delete event` }
-            
-            
-            const updatedFileContent = {
-                ...response.data,
-                message: `ADMIN: DELETING EVENT - ${data.title}`,
-            };
-            
-            const res = await this.API.delete(API_URL, updatedFileContent);
-            
-            if (res.status !== 200) return { success: false, message: `Failed to delete event: ${res.status}` }
-
-            return { success: true, message: `Event ${data.title} deleted successfully`, data: res.data };
-        }
+        } 
+        if (EVENT_MODE === "CREATE IMAGE") {
+            const json = IMG.img
+            try {
+                const createdFileContent = {
+                    message: `ADMIN: CREATING IMAGE`,
+                    content: json,
+                };
+                const res: AxiosResponse = await this.API.put(`/${REPO_OWNER}/${REPO_NAME}/contents/events/${EVENT_NAME}/assets/${IMG.num}.png`, {
+                    ...createdFileContent,
+                    committer: {
+                        name: 'TK EVENTS: ' + 'coordinator',
+                        email: 'cittakshashila@github.com'
+                    },
+                }, {
+                    headers: {
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                })
+            } catch (err) {
+                return { success: false, message: `Failed to create image` }
+            }
+            return { success: true, message: `Image created successfully` };
+        } 
     }
 };

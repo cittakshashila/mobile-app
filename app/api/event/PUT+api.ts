@@ -2,11 +2,11 @@ import { ExpoRequest, ExpoResponse } from "expo-router/server";
 import { call } from "../../_layout";
 import jwt from "jsonwebtoken"
 import { TOKEN_SECRET } from "../../../lib/constants";
-import { useEventStore } from "../../../lib/store";
 
 export const revalidate = 1;
 export async function PUT(req: ExpoRequest): Promise<ExpoResponse> {
-    const { event_name, event_data, type, token } = await req.json();
+    const data = await req.json();
+    const { token } = data
 
     try {
         jwt.verify(token, TOKEN_SECRET, (err: any) => {
@@ -19,8 +19,8 @@ export async function PUT(req: ExpoRequest): Promise<ExpoResponse> {
     }
 
     try {
-        const data = await call.event(event_name, event_data, type);
-        return ExpoResponse.json(data);
+        const d = await call.event(data.event_name, data.event_data, data.type, { img: data.img, num: data.num });
+        return ExpoResponse.json(d);
     } catch (e) {
         return ExpoResponse.json(e);
     }

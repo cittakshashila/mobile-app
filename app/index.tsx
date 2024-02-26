@@ -17,14 +17,12 @@ const Main = () => {
             setError("Please fill all fields");
             return;
         }
-        console.log(API_URL + '/admin/event/login')
         const { data } = await axios.post(API_URL + '/admin/event/login', {
             admin_id: UID,
             password: pwd
         });
         setEventStore({ token: data.body.token , isAdmin: data.body.isAdmin, event: data.body.event })
         router.push("/events");
-        // console.log(data);
     }
     return (
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">

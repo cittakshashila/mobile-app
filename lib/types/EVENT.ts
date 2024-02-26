@@ -15,7 +15,6 @@ export type EVENT = {
 
 type CONTACT = {
     incharge: string;
-    email: string;
     phno: string;
 };
 

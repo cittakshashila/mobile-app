@@ -26,23 +26,6 @@ const event = () => {
         CALL();
     }, [])
 
-    const handleDelete = async () => {
-        if (buttonType === "CONFIRM") {
-            // const res = await fetch("/api/event/PUT" as `http${string}`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({
-            //         token: event?.token,
-            //         event_name: params.name,
-            //         type: "DELETE"
-            //     })
-            // })
-            router.push("/events" as `http${string}`);
-            return;
-        }
-        setButtonType("CONFIRM");
-        return;
-    }
-
     if (!data) return <Loading />
 
     return (
@@ -116,7 +99,6 @@ const event = () => {
                     <Image className="mt-2 rounded-md" source={{ uri: MEDIA_URL(data.id, 2) }} style={{ width: 300, height: 200 }} />
                 </View>
             </ScrollView >
-            <View className="flex flex-row mb-2"><Pressable onPress={handleDelete} style={{ backgroundColor: buttonType === "CONFIRM" ? "#b91c1c" : "#ef4444" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
         </SafeAreaView >
     )
 }

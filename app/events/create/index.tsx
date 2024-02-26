@@ -3,6 +3,7 @@ import { EVENT_TYPE } from "../../../lib/types";
 import { useState } from "react";
 import SelectDropdown from 'react-native-select-dropdown'
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { useRouter } from "expo-router";
 import { useEventStore } from "../../../lib/store";
 
@@ -34,6 +35,9 @@ const CreateEvent = () => {
     const [imageIN, setImageIN] = useState<string | null>(null);
     const [imageOUT, setImageOUT] = useState<string | null>(null);
 
+    const [baseIN, setBaseIN] = useState<string | null>(null);
+    const [baseOUT, setBaseOUT] = useState<string | null>(null);
+
     const { event } = useEventStore()
 
     const pickImageIN = async () => {
@@ -45,6 +49,8 @@ const CreateEvent = () => {
         });
         if (!result.canceled) {
             setImageIN(result.assets[0].uri);
+            const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, { encoding: FileSystem.EncodingType.Base64 });
+            setBaseIN(base64)
         }
     };
 
@@ -57,6 +63,8 @@ const CreateEvent = () => {
         });
         if (!result.canceled) {
             setImageOUT(result.assets[0].uri);
+            const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, { encoding: FileSystem.EncodingType.Base64 });
+            setBaseOUT(base64)
         }
     };
 
@@ -101,6 +109,33 @@ const CreateEvent = () => {
                     type: "CREATE"
                 })
             })
+
+            if (imageIN) {
+                const res = await fetch("/api/event/PUT" as `http${string}`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        img: baseIN,
+                        num: 1,
+                        token: event?.token,
+                        event_name: createData.id,
+                        event_data: createData,
+                        type: "CREATE IMAGE"
+                    })
+                })
+            }
+            if (imageOUT) {
+                const res = await fetch("/api/event/PUT" as `http${string}`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        img: baseOUT,
+                        num: 2,
+                        token: event?.token,
+                        event_name: createData.id,
+                        event_data: createData,
+                        type: "CREATE IMAGE"
+                    })
+                })
+            }
 
             const data = await res.json();
             console.log(data);
@@ -375,17 +410,6 @@ const CreateEvent = () => {
                                 >
                                     {contact.incharge}
                                 </TextInput>
-                                <Text className="text-[16px] font-black mb-1">Email</Text>
-                                <TextInput
-                                    keyboardType="email-address"
-                                    onChange={(e) => {
-                                        createData.contacts[contact_idx].email = e.nativeEvent.text;
-                                        setCreateData({ ...createData });
-                                    }}
-                                    className={InputStyle}
-                                >
-                                    {contact.email}
-                                </TextInput>
                                 <Text className="text-[16px] font-black mb-1">Phone-no</Text>
                                 <TextInput
                                     keyboardType="number-pad"
@@ -410,7 +434,7 @@ const CreateEvent = () => {
                         ))}
                         {toggle.contacts && <Pressable
                             onPress={() => {
-                                createData.contacts.push({ incharge: "", email: "", phno: "" });
+                                createData.contacts.push({ incharge: "", phno: "" });
                                 setCreateData({ ...createData });
                             }}
                             className="w-full mt-2 h-14 bg-green-400 rounded-md border-black border-2 flex flex-col items-center justify-center text-center mb-2"
