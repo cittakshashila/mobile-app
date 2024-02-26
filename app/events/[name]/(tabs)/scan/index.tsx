@@ -4,11 +4,13 @@ import { CameraView, Camera } from "expo-camera/next";
 import { useGlobalSearchParams } from "expo-router";
 import { useEventStore } from "../../../../../lib/store"
 import axios from 'axios'
+import { API_URL } from "../../../../../lib/constants";
 
 export default function App() {
   const [hasPermission, setHasPermission] = useState<boolean>(false);
   const [scanned, setScanned] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [success, setSuccess] = useState<boolean>(false);
 
   const params = useGlobalSearchParams()
   const {event, setEvent} = useEventStore()
@@ -33,18 +35,17 @@ const handleBarCodeScanned = ({ data }: { data: string }) => {
             style: 'cancel',
         },
         {text: 'OK', onPress: async () => {
-            console.log(params.name, data, event.token)
             try {
-                const d = await axios.put(`https://backend-five-beryl.vercel.app/admin/allow`, {
+                const d = await axios.put(`${API_URL}/admin/allow`, {
                         event_id: params.name,
                         user_email: data
                     }, {
                         headers: {
-                            authorization: `Bearer ${event.token}`
+                            authorization: `Bearer ${event?.token}`
                     }
                 })
+                setSuccess(true)
 
-                console.log(d.data)
             } catch (err) { setError(true) }
             
             setScanned(false)
@@ -70,6 +71,9 @@ const handleBarCodeScanned = ({ data }: { data: string }) => {
       />
       {error && (
         <Button title={"Error"} onPress={() => setError(false)} />
+      )}
+      {success && (
+        <Button title={"User Allowed Successfully"} onPress={() => setSuccess(false)} />
       )}
     </View>
   );

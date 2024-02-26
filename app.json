@@ -22,7 +22,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.cittk.events"
     },
     "web": {
       "bundler": "metro",
@@ -30,11 +34,29 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      ["expo-router", { "origin": "https://evanbacon.dev" }],
-      ["expo-image-picker", { "photosPermission": "The app accesses your photos to create event photos" }]
+      [
+        "expo-router",
+        {
+          "origin": "https://evanbacon.dev"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to create event photos"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://evanbacon.dev"
+      },
+      "eas": {
+        "projectId": "428d6962-d5f8-48bb-a2fd-894e6caac68b"
+      }
     }
   }
 }

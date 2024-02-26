@@ -2,7 +2,7 @@
 const app = require('express')()
 const PORT = 3000
 
-const repoOwner = 'navi-prem'
+const repoOwner = 'cittakshashila'
 const repoName = 'test'
 const githubToken = process.env.TOKEN
 

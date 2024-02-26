@@ -7,6 +7,8 @@ import * as FileSystem from 'expo-file-system';
 import { useRouter } from "expo-router";
 import { useEventStore } from "../../../lib/store";
 import { SmallLoading } from "../../../lib/components";
+import { API_URL } from "../../../lib/constants";
+import axios from "axios";
 
 const CreateEvent = () => {
     const router = useRouter()
@@ -40,8 +42,15 @@ const CreateEvent = () => {
     const [baseIN, setBaseIN] = useState<string | null>(null);
     const [baseOUT, setBaseOUT] = useState<string | null>(null);
 
-    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" | "">("");
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" | "">("DAY1");
     const { event } = useEventStore()
+
+    const handleDateSet = (d: "DAY1" | "DAY2" | "DAY3") => {
+        createData.details.date = d
+        createData.day = d
+        setCreateData({ ...createData })
+        setDate(d)
+    }
 
     const pickImageIN = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -102,7 +111,21 @@ const CreateEvent = () => {
             }
 
             setCreateData({ ...createData })
-            console.log(createData)
+
+            try {
+                const { data } = await axios.post(`${API_URL}/events`, {
+                    event_id: createData.id,
+                    name: createData.title,
+                    fee: createData.category === "GEN" ? 0 : 200,
+                    pass_id: createData.day
+                }, {
+                    headers: { Authorization: `Bearer ${event?.token}` }
+                })
+            } catch (err) {
+                return
+            }
+            console.log(1)
+
             try {
                 const res = await fetch("/api/event/PUT" as `http${string}`, {
                     method: "PUT",
@@ -398,17 +421,16 @@ const CreateEvent = () => {
                         </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Date</Text>
                         <View className="flex flex-row items-center justify-between">
-                            <Pressable onPress={() => setDate("DAY1")} className={`w-1/4 h-14 ${date === 'DAY1' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                            <Pressable onPress={() => handleDateSet("DAY1")} className={`w-1/4 h-14 ${date === 'DAY1' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
                                 <Text>DAY1</Text>
                             </Pressable>
-                            <Pressable onPress={() => setDate("DAY2")} className={`w-1/4 h-14 ${date === 'DAY2' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                            <Pressable onPress={() => handleDateSet("DAY2")} className={`w-1/4 h-14 ${date === 'DAY2' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
                                 <Text>DAY2</Text>
                             </Pressable>
-                            <Pressable onPress={() => setDate("DAY3")} className={`w-1/4 h-14 ${date === 'DAY3' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                            <Pressable onPress={() => handleDateSet("DAY3")} className={`w-1/4 h-14 ${date === 'DAY3' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
                                 <Text>DAY3</Text>
                             </Pressable>
                         </View>
-                        <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
                     </View>
 
                     <View className="mt-4 w-full flex flex-row items-center justify-between">
