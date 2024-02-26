@@ -45,6 +45,16 @@
         {
           "photosPermission": "The app accesses your photos to create event photos"
         }
+      ], [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow this app to access camera."
+        }
+      ], [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow this app to access your camera."
+        }
       ]
     ],
     "experiments": {

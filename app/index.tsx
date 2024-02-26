@@ -39,8 +39,14 @@ const Main = () => {
             <Text className="text-4xl font-black">~LOGIN~</Text>
             {!!error && <Text className="text-xl mt-2 text-red-400 font-medium">{error}</Text>}
             <View className="w-full flex flex-col items-center justify-center my-4">
-                <TextInput onChange={(e) => { setUID(e.nativeEvent.text); }} className="w-[90%] placeholder:text-black rounded-md border-black border-2 p-6 bg-white my-2" placeholder="ID" />
-                <TextInput onChange={(e) => { setPwd(e.nativeEvent.text); }} secureTextEntry={true} className="w-[90%] placeholder:text-black rounded-md border-black border-2 p-6 bg-white my-2" placeholder="Password" />
+                <View className="w-full flex flex-col items-center justify-center">
+                    <Text className="text-left w-full ml-12 font-black">ID</Text>
+                    <TextInput onChange={(e) => { setUID(e.nativeEvent.text); }} className="w-[90%] rounded-md border-black border-2 py-6 px-4 bg-white my-2" />
+                </View>
+                <View className="w-full flex flex-col items-center justify-center mt-4">
+                    <Text className="text-left w-full ml-12 font-black">PASSWORD</Text>
+                    <TextInput onChange={(e) => { setPwd(e.nativeEvent.text); }} secureTextEntry={true} className="w-[90%] rounded-md border-black border-2 py-6 px-4 bg-white my-2" />
+                </View>
             </View>
             <Pressable onPress={Submit} className="w-[90%]  bg-black p-6 my-2 rounded-md">{!isLoading ? <Text className="font-black text-center text-white">SUBMIT</Text> : <SmallLoading />}</Pressable>
         </SafeAreaView>

@@ -20,8 +20,7 @@ const HomeIcon = () => {
 
 export default () => {
     const params = useGlobalSearchParams()
-    const {event} = useEventStore()
-    console.log(event?.isAdmin)
+    const { event } = useEventStore()
     return (
         <Tabs screenOptions={{
             headerShown: false,
@@ -32,8 +31,9 @@ export default () => {
             }} />
             <Tabs.Screen name="edit/index" options={{
                 tabBarIcon: EditIcon,
+                tabBarItemStyle: { display: event?.isAdmin ? "flex" : "none" },
                 tabBarLabel: "Edit",
-                href: event?.isAdmin ? `/events/${params.name}/edit`: null
+                href: `/events/${params.name}/edit`
             }} />
             <Tabs.Screen name="scan/index" options={{
                 tabBarIcon: ScanIcon,

@@ -23,7 +23,7 @@ const HeaderLeft = ({ props }: any) => {
     );
 };
 
-export const call = new API("YOUR TOKEN GOES HERE");
+export const call = new API("YOUR TOKEN HERE");
 
 function SettingsScreen() {
     return (
