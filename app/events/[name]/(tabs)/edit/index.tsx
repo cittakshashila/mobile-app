@@ -1,14 +1,15 @@
 import SelectDropdown from 'react-native-select-dropdown'
 import { useEffect, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from 'react-native';
 import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { PARSE } from '../../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../../lib/types';
-import { Loading } from '../../../../../lib/components';
+import { Loading, SmallLoading } from '../../../../../lib/components';
 import { useEventStore } from '../../../../../lib/store';
 
 const EditEvent = () => {
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const router = useRouter();
     const { event } = useEventStore()
@@ -53,18 +54,25 @@ const EditEvent = () => {
 
     const handleSave = async () => {
         if (buttonType == "CONFIRM") {
-            console.log(createData)
-            const res = await fetch("/api/event/PUT" as `http${string}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    token: event?.token,
-                    event_name: params.name,
-                    event_data: createData,
-                    type: "UPDATE"
+            setIsLoading(true);
+            try {
+                const res = await fetch("/api/event/PUT" as `http${string}`, {
+                    method: "PUT",
+                    body: JSON.stringify({
+                        token: event?.token,
+                        event_name: params.name,
+                        event_data: createData,
+                        type: "UPDATE"
+                    })
                 })
-            })
-            router.push(`/events/${params.name}` as `http${string}`);
-            return;
+                console.log(res);
+                router.push(`/events/${params.name}` as `http${string}`);
+                return;
+            } catch (e) {
+                Alert.alert("Error", "Something went wrong");
+            } finally {
+                setIsLoading(false);
+            }
         }
         setButtonType("CONFIRM");
         return;
@@ -332,17 +340,6 @@ const EditEvent = () => {
                                 >
                                     {contact.incharge}
                                 </TextInput>
-                                <Text className="text-[16px] font-black mb-1">Email</Text>
-                                <TextInput
-                                    keyboardType="email-address"
-                                    onChange={(e) => {
-                                        createData.contacts[contact_idx].email = e.nativeEvent.text;
-                                        setCreateData({ ...createData });
-                                    }}
-                                    className={InputStyle}
-                                >
-                                    {contact.email}
-                                </TextInput>
                                 <Text className="text-[16px] font-black mb-1">Phone-no</Text>
                                 <TextInput
                                     keyboardType="number-pad"
@@ -406,7 +403,7 @@ const EditEvent = () => {
 
                 </View>
             </ ScrollView>
-            <View className="flex flex-row"><Pressable onPress={handleSave} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
+            <View className="flex mb-2 flex-row"><Pressable onPress={handleSave} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md">{!isLoading ? <Text className="text-white text-center font-black">{buttonType}</Text> : <SmallLoading />}</Pressable></View>
         </SafeAreaView>
 
     )

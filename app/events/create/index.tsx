@@ -1,4 +1,4 @@
-import { Button, Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
+import { Alert, Button, Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native";
 import { EVENT_TYPE } from "../../../lib/types";
 import { useState } from "react";
 import SelectDropdown from 'react-native-select-dropdown'
@@ -6,9 +6,11 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from "expo-router";
 import { useEventStore } from "../../../lib/store";
+import { SmallLoading } from "../../../lib/components";
 
 const CreateEvent = () => {
     const router = useRouter()
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const defaultData: EVENT_TYPE = {
         "id": "",
@@ -38,7 +40,7 @@ const CreateEvent = () => {
     const [baseIN, setBaseIN] = useState<string | null>(null);
     const [baseOUT, setBaseOUT] = useState<string | null>(null);
 
-    const [date, setDate] = useState<"DAY1"|"DAY2"|"DAY3"|"">("");
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" | "">("");
     const { event } = useEventStore()
 
     const pickImageIN = async () => {
@@ -92,6 +94,7 @@ const CreateEvent = () => {
 
     const handleCreate = async () => {
         if (buttonType == "CONFIRM") {
+            setIsLoading(true);
             for (const key in toggle) {
                 if (!toggle[key]) {
                     delete createData[key]
@@ -100,49 +103,54 @@ const CreateEvent = () => {
 
             setCreateData({ ...createData })
             console.log(createData)
-
-            const res = await fetch("/api/event/PUT" as `http${string}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    token: event?.token,
-                    event_name: createData.id,
-                    event_data: createData,
-                    type: "CREATE"
-                })
-            })
-
-            if (imageIN) {
+            try {
                 const res = await fetch("/api/event/PUT" as `http${string}`, {
                     method: "PUT",
                     body: JSON.stringify({
-                        img: baseIN,
-                        num: 1,
                         token: event?.token,
                         event_name: createData.id,
                         event_data: createData,
-                        type: "CREATE IMAGE"
+                        type: "CREATE"
                     })
                 })
-            }
-            if (imageOUT) {
-                const res = await fetch("/api/event/PUT" as `http${string}`, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        img: baseOUT,
-                        num: 2,
-                        token: event?.token,
-                        event_name: createData.id,
-                        event_data: createData,
-                        type: "CREATE IMAGE"
-                    })
-                })
-            }
 
-            const data = await res.json();
-            console.log(data);
-            router.push(`/events` as `http${string}`);
-            setCreateData(defaultData);
-            return;
+                if (imageIN) {
+                    const res = await fetch("/api/event/PUT" as `http${string}`, {
+                        method: "PUT",
+                        body: JSON.stringify({
+                            img: baseIN,
+                            num: 1,
+                            token: event?.token,
+                            event_name: createData.id,
+                            event_data: createData,
+                            type: "CREATE IMAGE"
+                        })
+                    })
+                }
+                if (imageOUT) {
+                    const res = await fetch("/api/event/PUT" as `http${string}`, {
+                        method: "PUT",
+                        body: JSON.stringify({
+                            img: baseOUT,
+                            num: 2,
+                            token: event?.token,
+                            event_name: createData.id,
+                            event_data: createData,
+                            type: "CREATE IMAGE"
+                        })
+                    })
+                }
+
+                const data = await res.json();
+                console.log(data);
+                router.push(`/events` as `http${string}`);
+                setCreateData(defaultData);
+                return;
+            } catch (e) {
+                Alert.alert("Error", "Something went wrong");
+            } finally {
+                setIsLoading(false);
+            }
         }
         setButtonType("CONFIRM");
     }
@@ -151,7 +159,7 @@ const CreateEvent = () => {
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full p-2">
                 <View className="m-2">
-                    <Text className={InputLabelStyle}>ID</Text> 
+                    <Text className={InputLabelStyle}>ID</Text>
                     <TextInput
                         onChange={(e) => {
                             createData.id = e.nativeEvent.text;
@@ -163,7 +171,7 @@ const CreateEvent = () => {
                     </TextInput>
                 </View>
                 <View className="m-2">
-                    <View>
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.title ?
                             <Text className={InputLabelStyle}>Title</Text> :
                             <Text className={InputLabelStyle + ' italic line-through '}>Title</Text>
@@ -175,8 +183,8 @@ const CreateEvent = () => {
                             }}
                         >
                             {toggle.title ?
-                                <Text className="font-bold text-3xl">{'^'}</Text> :
-                                <Text className="font-bold text-3xl">{'v'}</Text>
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
                             }
                         </Pressable>
                     </View>
@@ -190,21 +198,23 @@ const CreateEvent = () => {
                         {createData.title}
                     </TextInput>}
 
-                    {toggle.description ?
-                        <Text className={InputLabelStyle}>Description</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Description</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.description = !toggle.description
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.description ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Description</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Description</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.description = !toggle.description
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.description ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.description && <TextInput
                         onChange={(e) => {
                             createData.description = e.nativeEvent.text;
@@ -217,21 +227,23 @@ const CreateEvent = () => {
                         {createData.description}
                     </TextInput>}
 
-                    {toggle.registration ?
-                        <Text className={InputLabelStyle}>Registration</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Registration</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.registration = !toggle.registration
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.registration ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Registration</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Registration</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.registration = !toggle.registration
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.registration ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.registration && createData.registration.map((reg, reg_idx) => (
                         <View key={reg_idx} className="flex flex-row items-center">
                             <TextInput
@@ -264,21 +276,23 @@ const CreateEvent = () => {
                         <Text className="font-semibold text-xl">+</Text>
                     </Pressable>}
 
-                    {toggle.rules ?
-                        <Text className={InputLabelStyle}>Rules</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Rules</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.rules = !toggle.rules
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.rules ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Rules</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Rules</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.rules = !toggle.rules
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.rules ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.rules && createData.rules.map((rule, rule_idx) => (
                         <View key={rule_idx} className="flex flex-row items-center">
                             <TextInput
@@ -301,6 +315,7 @@ const CreateEvent = () => {
                             </Pressable>
                         </View>
                     ))}
+
                     {toggle.rules && <Pressable
                         onPress={() => {
                             createData.rules.push("");
@@ -311,21 +326,23 @@ const CreateEvent = () => {
                         <Text className="font-semibold text-xl">+</Text>
                     </Pressable>}
 
-                    {toggle.guidelines ?
-                        <Text className={InputLabelStyle}>Guidelines</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Guidelines</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.guidelines = !toggle.guidelines
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.guidelines ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Guidelines</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Guidelines</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.guidelines = !toggle.guidelines
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.guidelines ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     {toggle.guidelines && createData.guidelines.map((g, i) => (
                         <View key={i} className="flex flex-row items-center">
                             <TextInput
@@ -380,35 +397,37 @@ const CreateEvent = () => {
                             />
                         </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Date</Text>
-                         <View className="flex flex-row items-center justify-between">
-                             <Pressable onPress={()=>setDate("DAY1")} className={`w-1/4 h-14 ${date==='DAY1' ? 'bg-red-400':'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
-                                 <Text>DAY1</Text>
-                             </Pressable>
-                             <Pressable onPress={()=>setDate("DAY2")} className={`w-1/4 h-14 ${date==='DAY2' ? 'bg-red-400':'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
-                                 <Text>DAY2</Text>
-                             </Pressable>
-                             <Pressable onPress={()=>setDate("DAY3")} className={`w-1/4 h-14 ${date==='DAY3' ? 'bg-red-400':'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
-                                 <Text>DAY3</Text>
-                             </Pressable>
-                         </View>
+                        <View className="flex flex-row items-center justify-between">
+                            <Pressable onPress={() => setDate("DAY1")} className={`w-1/4 h-14 ${date === 'DAY1' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY1</Text>
+                            </Pressable>
+                            <Pressable onPress={() => setDate("DAY2")} className={`w-1/4 h-14 ${date === 'DAY2' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY2</Text>
+                            </Pressable>
+                            <Pressable onPress={() => setDate("DAY3")} className={`w-1/4 h-14 ${date === 'DAY3' ? 'bg-red-400' : 'bg-green-400'} rounded-md border-black border-2 items-center justify-center text-center mb-2`}>
+                                <Text>DAY3</Text>
+                            </Pressable>
+                        </View>
                         <Text className="text-[16px] font-black mt-2 mb-1">Time</Text>
                     </View>
 
-                    {toggle.contacts ?
-                        <Text className={InputLabelStyle}>Contacts</Text> :
-                        <Text className={InputLabelStyle + ' italic line-through '}>Contacts</Text>
-                    }
-                    <Pressable
-                        onPress={() => {
-                            toggle.contacts = !toggle.contacts
-                            setToggle({ ...toggle })
-                        }}
-                    >
+                    <View className="mt-4 w-full flex flex-row items-center justify-between">
                         {toggle.contacts ?
-                            <Text className="font-bold text-3xl">{'^'}</Text> :
-                            <Text className="font-bold text-3xl">{'v'}</Text>
+                            <Text className={InputLabelStyle}>Contacts</Text> :
+                            <Text className={InputLabelStyle + ' italic line-through '}>Contacts</Text>
                         }
-                    </Pressable>
+                        <Pressable
+                            onPress={() => {
+                                toggle.contacts = !toggle.contacts
+                                setToggle({ ...toggle })
+                            }}
+                        >
+                            {toggle.contacts ?
+                                <Text className="font-bold text-xl">&uarr;</Text> :
+                                <Text className="font-bold text-xl">&darr;</Text>
+                            }
+                        </Pressable>
+                    </View>
                     <View>
                         {toggle.contacts && createData.contacts.map((contact, contact_idx) => (
                             <View key={contact_idx} className="mb-2 bg-gray-200 p-4 rounded-md">
@@ -493,7 +512,7 @@ const CreateEvent = () => {
 
                 </View>
             </ ScrollView>
-            <View className="flex flex-row"><Pressable onPress={handleCreate} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
+            <View className="flex flex-row"><Pressable onPress={handleCreate} style={{ backgroundColor: buttonType === "CONFIRM" ? "#ef4444" : "black" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md">{!isLoading ? <Text className="text-white text-center font-black">{buttonType}</Text> : <SmallLoading />}</Pressable></View>
         </SafeAreaView>
     )
 }
