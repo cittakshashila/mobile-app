@@ -7,13 +7,13 @@ import axios from 'axios';
 import { API_URL } from "../../../../../lib/constants";
 
 export default function App() {
-    const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+    const [hasPermission, setHasPermission] = useState<boolean>(false);
     const [scanned, setScanned] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
 
-    const params = useGlobalSearchParams();
-    const { event } = useEventStore();
+    const params = useGlobalSearchParams()
+    const { event, setEvent } = useEventStore()
 
     useEffect(() => {
         const getCameraPermissions = async () => {
@@ -25,16 +25,17 @@ export default function App() {
     }, []);
 
     const handleBarCodeScanned = ({ data }: { data: string }) => {
-        setScanned(true);
+        setScanned(true)
         Alert.alert('Register', `Mark ${data} as visited for event ${params.name}`, [
             {
                 text: 'Cancel',
-                onPress: () => setScanned(false),
+                onPress: async () => {
+                    setScanned(false)
+                },
                 style: 'cancel',
             },
             {
-                text: 'OK',
-                onPress: async () => {
+                text: 'OK', onPress: async () => {
                     try {
                         await axios.put(`${API_URL}/admin/allow`, {
                             event_id: params.name,
@@ -43,12 +44,11 @@ export default function App() {
                             headers: {
                                 authorization: `Bearer ${event?.token}`
                             }
-                        });
-                        setSuccess(true);
-                    } catch (err) {
-                        setError(true);
-                    }
-                    setScanned(false);
+                        })
+                        setSuccess(true)
+
+                    } catch (err) { setError(true) }
+
                 }
             },
         ]);
@@ -68,10 +68,16 @@ export default function App() {
                 style={StyleSheet.absoluteFillObject}
             />
             {error && (
-                <Button title={"Error"} onPress={() => setError(false)} />
+                <Button title={"Error"} onPress={() => {
+                    setError(false)
+                    setScanned(false)
+                }} />
             )}
             {success && (
-                <Button title={"User Allowed Successfully"} onPress={() => setSuccess(false)} />
+                <Button title={"User Allowed Successfully"} onPress={() => {
+                    setSuccess(false)
+                    setScanned(false)
+                }} />
             )}
         </View>
     );
@@ -84,3 +90,467 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+        
+                
+
+            
+
+        
+    
+        
+        
+        
+                
+            
+        
+        
+        
+            
+            
+                
+            
+            
+        
+
+
+
+         
+   
+                
+                            
+                        
+                            
+                            
+                        
+                    
+                        
+                    
+                    
+            
+                
+    
+             
+               
+                    
+                
+                
+          
+        
+      
+
+ 
+
+ 
+ 
+
+        
+   
