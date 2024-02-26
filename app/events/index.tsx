@@ -23,7 +23,6 @@ const Events = () => {
             if (!(useEvent.isAdmin)) {
                 const filteredEntries = Object.entries(resData).filter(([key, _]) => useEvent.event.includes(key));
                 resData = Object.fromEntries(filteredEntries);
-                console.log(resData);
             }
             setData(resData);
         }

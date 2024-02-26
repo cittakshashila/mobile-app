@@ -165,7 +165,6 @@ const CreateEvent = () => {
                 }
 
                 const data = await res.json();
-                console.log(data);
                 router.push(`/events` as `http${string}`);
                 setCreateData(defaultData);
                 return;

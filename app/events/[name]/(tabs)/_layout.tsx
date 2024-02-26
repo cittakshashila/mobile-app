@@ -1,5 +1,6 @@
-import { Tabs } from "expo-router"
+import { Tabs, useGlobalSearchParams } from "expo-router"
 import { AntDesign } from '@expo/vector-icons';
+import { useEventStore } from '../../../../lib/store'
 
 const EditIcon = () => {
     return (<AntDesign name="edit" size={24} color="black" />)
@@ -18,6 +19,9 @@ const HomeIcon = () => {
 }
 
 export default () => {
+    const params = useGlobalSearchParams()
+    const {event} = useEventStore()
+    console.log(event?.isAdmin)
     return (
         <Tabs screenOptions={{
             headerShown: false,
@@ -28,7 +32,8 @@ export default () => {
             }} />
             <Tabs.Screen name="edit/index" options={{
                 tabBarIcon: EditIcon,
-                tabBarLabel: "Edit"
+                tabBarLabel: "Edit",
+                href: event?.isAdmin ? `/events/${params.name}/edit`: null
             }} />
             <Tabs.Screen name="scan/index" options={{
                 tabBarIcon: ScanIcon,

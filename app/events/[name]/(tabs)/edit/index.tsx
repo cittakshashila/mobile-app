@@ -50,10 +50,8 @@ const EditEvent = () => {
 
     useEffect(() => {
         const CALL = async () => {
-            console.log(params.name);
             const res = await fetch("/api/event/" + params.name as `http${string}`);
             const D = await res.json();
-            console.log(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
             setCreateData(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
             setDate(PARSE(D.payload.blob.rawLines).day)
         }
@@ -75,9 +73,7 @@ const EditEvent = () => {
                 }, {
                     headers: { Authorization: `Bearer ${event?.token}` }
                 })
-                console.log(data)
             } catch (err) {
-                console.log(err)
             }
 
             try {
@@ -90,7 +86,6 @@ const EditEvent = () => {
                         type: "UPDATE"
                     })
                 })
-                console.log(res);
                 router.push(`/events` as `http${string}`);
                 return;
             } catch (e) {

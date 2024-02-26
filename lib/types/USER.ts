@@ -3,5 +3,6 @@ export type USER = {
     email: string;
     clg_name: string;
     phone_no: string;
-    is_present: boolean
+    is_present: boolean;
+    paid: boolean;
 }

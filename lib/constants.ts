@@ -14,7 +14,7 @@ export const INFO_URL = (ID: string): INFO_URL_TYPE => {
 export const FOLDER_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/master/events`;
 export const FOLDER_INFO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/master/info.json`;
 
-const production = true
+const production = false
 export const API_URL = production ? "https://api.cittakshashila.in" : "https://backend-five-beryl.vercel.app";
 
 export const TOKEN_SECRET = 'veryverysecretthingisthis'

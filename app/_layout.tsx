@@ -36,6 +36,7 @@ function SettingsScreen() {
 const StackLayout = () => {
     const useEvent = useEventStore((state) => state.event);
     const router = useRouter();
+
     useEffect(() => {
         if (useEvent) {
             router.push("/events" as `http${string}`);
