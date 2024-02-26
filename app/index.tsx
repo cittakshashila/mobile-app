@@ -4,25 +4,35 @@ import { useEventStore } from "../lib/store";
 import { useRouter } from "expo-router";
 import { API_URL } from "../lib/constants";
 import axios from "axios";
+import { SmallLoading } from "../lib/components";
 
 const Main = () => {
     const [UID, setUID] = useState<string>();
     const [pwd, setPwd] = useState<string>();
     const [error, setError] = useState<string>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const setEventStore = useEventStore((state) => state.setEvents)
     const router = useRouter();
 
     const Submit = async () => {
+        setIsLoading(true);
         if (!UID || !pwd) {
             setError("Please fill all fields");
+            setIsLoading(false);
             return;
         }
-        const { data } = await axios.post(API_URL + '/admin/event/login', {
-            admin_id: UID,
-            password: pwd
-        });
-        setEventStore({ token: data.body.token , isAdmin: data.body.isAdmin, event: data.body.event })
-        router.push("/events");
+        try {
+            const { data } = await axios.post(API_URL + '/admin/event/login', {
+                admin_id: UID,
+                password: pwd
+            });
+            setEventStore({ token: data.body.token, isAdmin: data.body.isAdmin, event: data.body.event })
+            router.push("/events");
+        } catch (e) {
+            setError("Invalid Credentials");
+        } finally {
+            setIsLoading(false);
+        }
     }
     return (
         <SafeAreaView className="w-full h-full flex flex-col items-center justify-center">
@@ -32,7 +42,7 @@ const Main = () => {
                 <TextInput onChange={(e) => { setUID(e.nativeEvent.text); }} className="w-[90%] placeholder:text-black rounded-md border-black border-2 p-6 bg-white my-2" placeholder="ID" />
                 <TextInput onChange={(e) => { setPwd(e.nativeEvent.text); }} secureTextEntry={true} className="w-[90%] placeholder:text-black rounded-md border-black border-2 p-6 bg-white my-2" placeholder="Password" />
             </View>
-            <Pressable onPress={Submit} className="w-[90%]  bg-black p-6 my-2 rounded-md"><Text className="font-black text-center text-white">SUBMIT</Text></Pressable>
+            <Pressable onPress={Submit} className="w-[90%]  bg-black p-6 my-2 rounded-md">{!isLoading ? <Text className="font-black text-center text-white">SUBMIT</Text> : <SmallLoading />}</Pressable>
         </SafeAreaView>
     )
 }

@@ -11,8 +11,8 @@ export async function PUT(req: ExpoRequest): Promise<ExpoResponse> {
     try {
         jwt.verify(token, TOKEN_SECRET, (err: any) => {
             if (err)
-              return ExpoResponse
-                .json({ statusCode: 403, body: { message: "Forbidden" } });
+                return ExpoResponse
+                    .json({ statusCode: 403, body: { message: "Forbidden" } });
         });
     } catch (e) {
         return ExpoResponse.json(e);
