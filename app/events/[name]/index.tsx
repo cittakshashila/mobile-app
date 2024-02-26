@@ -9,7 +9,7 @@ import { Loading } from "../../../lib/components";
 const event = () => {
 
     const [data, setData] = useState<EVENT_TYPE | null>(null);
-    const [buttonType, setButtonType] = useState<"DELETE" | "CONFIRM">("DELETE");
+    const [buttonType, setButtonType] = useState<"CONFIRM">("CONFIRM");
 
     const router = useRouter();
 
@@ -25,15 +25,6 @@ const event = () => {
         CALL();
     }, [])
     if (!data) return <Loading />
-    const handleDelete = async () => {
-        if (buttonType === "CONFIRM") {
-            // TODO: DELETE
-            router.push("/events" as `http${string}`);
-            return;
-        }
-        setButtonType("CONFIRM");
-        return;
-    }
     return (
         <SafeAreaView className="w-full h-full px-2 flex flex-col items-center justify-center">
             <ScrollView className="px-4 p w-full">
@@ -95,7 +86,6 @@ const event = () => {
                         </View>
                     </View>
                 </View>
-                <View className="flex flex-row"><Pressable onPress={handleDelete} style={{ backgroundColor: buttonType === "CONFIRM" ? "#b91c1c" : "#ef4444" }} className="mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">{buttonType}</Text></Pressable></View>
             </ScrollView >
             <View className="flex flex-row"><Pressable onPress={() => router.push(`/events/${params.name}/edit` as `http${string}`)} className="bg-black mt-2 border-2 border-black py-6 w-[360px] rounded-md"><Text className="text-white text-center font-black">EDIT!</Text></Pressable></View>
         </SafeAreaView >
