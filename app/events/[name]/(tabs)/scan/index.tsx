@@ -48,7 +48,6 @@ const handleBarCodeScanned = ({ data }: { data: string }) => {
 
             } catch (err) { setError(true) }
             
-            setScanned(false)
         }},
     ]);
 };
@@ -70,10 +69,16 @@ const handleBarCodeScanned = ({ data }: { data: string }) => {
         style={StyleSheet.absoluteFillObject}
       />
       {error && (
-        <Button title={"Error"} onPress={() => setError(false)} />
+        <Button title={"Error"} onPress={() => {
+            setError(false)
+            setScanned(false)
+        }}/>
       )}
       {success && (
-        <Button title={"User Allowed Successfully"} onPress={() => setSuccess(false)} />
+        <Button title={"User Allowed Successfully"} onPress={() => { 
+            setSuccess(false) 
+            setScanned(false)
+        }}/>
       )}
     </View>
   );
