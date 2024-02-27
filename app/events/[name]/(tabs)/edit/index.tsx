@@ -12,7 +12,7 @@ import { API_URL } from '../../../../../lib/constants';
 const EditEvent = () => {
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" >("DAY1");
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3">("DAY1");
 
     const router = useRouter();
     const { event } = useEventStore()
@@ -277,6 +277,7 @@ const EditEvent = () => {
                         <View key={i} className="flex flex-row items-center">
                             <TextInput
                                 onChange={(e) => {
+                                    if (!createData.guidelines) createData.guidelines = [];
                                     createData.guidelines[i] = e.nativeEvent.text;
                                     setCreateData({ ...createData });
                                 }}

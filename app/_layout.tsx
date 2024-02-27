@@ -23,15 +23,7 @@ const HeaderLeft = ({ props }: any) => {
     );
 };
 
-export const call = new API("YOUR TOKEN HERE");
-
-function SettingsScreen() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Settings!</Text>
-        </View>
-    );
-}
+export const call = new API("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");
 
 const StackLayout = () => {
     const useEvent = useEventStore((state) => state.event);
