@@ -22,7 +22,7 @@
     "base-64": "^1.0.0",
     "cors-anywhere": "^0.4.4",
     "dotenv": "^16.4.1",
-    "expo": "~50.0.7",
+    "expo": "~50.0.8",
     "expo-camera": "~14.0.5",
     "expo-clipboard": "^5.0.1",
     "expo-file-system": "^16.0.6",

@@ -12,7 +12,7 @@ import { API_URL } from '../../../../../lib/constants';
 const EditEvent = () => {
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" >("DAY1");
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3">("DAY1");
 
     const router = useRouter();
     const { event } = useEventStore()
@@ -297,6 +297,7 @@ const EditEvent = () => {
                     ))}
                     {toggle.guidelines && <Pressable
                         onPress={() => {
+                            if (!createData.guidelines) createData.guidelines = [];
                             createData.guidelines.push("");
                             setCreateData({ ...createData });
                         }}
