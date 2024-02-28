@@ -3,14 +3,15 @@
     "version": ">= 7.3.0"
   },
   "build": {
+    "production": {
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
       "distribution": "internal"
-    },
-    "production": {}
+    }
   },
   "submit": {
     "production": {}

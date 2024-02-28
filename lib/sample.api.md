@@ -2,7 +2,7 @@
 const app = require('express')()
 const PORT = 3000
 
-const repoOwner = 'cittakshashila'
+const repoOwner = ''
 const repoName = 'test'
 const githubToken = process.env.TOKEN
 
