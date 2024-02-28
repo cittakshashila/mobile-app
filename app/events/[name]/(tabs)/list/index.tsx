@@ -5,7 +5,7 @@ import { Loading } from "../../../../../lib/components";
 import { setString } from 'expo-clipboard';
 import axios from 'axios';
 import { API_URL } from '../../../../../lib/constants';
-import { useEventStore } from '../../../../../lib/store';
+import { useEventStore } from '../../../../../lib/store/events';
 import { useGlobalSearchParams } from 'expo-router';
 
 const List = () => {

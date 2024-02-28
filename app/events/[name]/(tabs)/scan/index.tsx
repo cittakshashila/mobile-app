@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, Alert } from "react-native";
 import { Camera } from "expo-camera";
 import { useGlobalSearchParams } from "expo-router";
-import { useEventStore } from "../../../../../lib/store";
+import { useEventStore } from "../../../../../lib/store/events";
 import axios from 'axios';
 import { API_URL } from "../../../../../lib/constants";
 
@@ -497,60 +497,60 @@ const styles = StyleSheet.create({
 
 
 
-    
-
-        
-                
-
-            
-
-        
-    
-        
-        
-        
-                
-            
-        
-        
-        
-            
-            
-                
-            
-            
-        
 
 
 
-         
-   
-                
-                            
-                        
-                            
-                            
-                        
-                    
-                        
-                    
-                    
-            
-                
-    
-             
-               
-                    
-                
-                
-          
-        
-      
 
- 
 
- 
- 
 
-        
-   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

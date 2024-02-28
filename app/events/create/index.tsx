@@ -5,9 +5,9 @@ import SelectDropdown from 'react-native-select-dropdown'
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from "expo-router";
-import { useEventStore } from "../../../lib/store";
+import { useEventStore } from "../../../lib/store/events";
 import { SmallLoading } from "../../../lib/components";
-import { API_URL } from "../../../lib/constants";
+import { API_URL, CLIENT_URL, MIDDLE_URL } from "../../../lib/constants";
 import axios from "axios";
 
 const CreateEvent = () => {
@@ -111,9 +111,8 @@ const CreateEvent = () => {
             }
 
             setCreateData({ ...createData })
-
             try {
-                const { data } = await axios.post(`${API_URL}/events`, {
+                await axios.post(`${API_URL}/events`, {
                     event_id: createData.id,
                     name: createData.title,
                     fee: createData.category === "GEN" ? 0 : 200,
@@ -122,49 +121,45 @@ const CreateEvent = () => {
                     headers: { Authorization: `Bearer ${event?.token}` }
                 })
             } catch (err) {
+                console.log(err)
+                Alert.alert("Error", "Something went wrong");
+                setIsLoading(false);
                 return
             }
-            console.log(1)
-
             try {
-                const res = await fetch("/api/event/PUT" as `http${string}`, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        token: event?.token,
-                        event_name: createData.id,
-                        event_data: createData,
-                        type: "CREATE"
-                    })
+                axios.put(MIDDLE_URL + "/PUT" as `http${string}`, {
+                    token: event?.token,
+                    event_name: createData.id,
+                    event_data: createData,
+                    type: "CREATE"
+                }, {
+                    timeout: 10000
                 })
 
                 if (imageIN) {
-                    const res = await fetch("/api/event/PUT" as `http${string}`, {
-                        method: "PUT",
-                        body: JSON.stringify({
-                            img: baseIN,
-                            num: 1,
-                            token: event?.token,
-                            event_name: createData.id,
-                            event_data: createData,
-                            type: "CREATE IMAGE"
-                        })
+                    axios.put(MIDDLE_URL + "/PUT" as `http${string}`, {
+                        img: baseIN,
+                        num: 1,
+                        token: event?.token,
+                        event_name: createData.id,
+                        event_data: createData,
+                        type: "CREATE IMAGE"
+                    }, {
+                        timeout: 10000
                     })
                 }
                 if (imageOUT) {
-                    const res = await fetch("/api/event/PUT" as `http${string}`, {
-                        method: "PUT",
-                        body: JSON.stringify({
-                            img: baseOUT,
-                            num: 2,
-                            token: event?.token,
-                            event_name: createData.id,
-                            event_data: createData,
-                            type: "CREATE IMAGE"
-                        })
+                    axios.put(MIDDLE_URL + "/PUT" as `http${string}`, {
+                        img: baseOUT,
+                        num: 2,
+                        token: event?.token,
+                        event_name: createData.id,
+                        event_data: createData,
+                        type: "CREATE IMAGE"
+                    }, {
+                        timeout: 10000
                     })
                 }
-
-                const data = await res.json();
                 router.push(`/events` as `http${string}`);
                 setCreateData(defaultData);
                 return;
