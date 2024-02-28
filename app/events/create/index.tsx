@@ -118,7 +118,8 @@ const CreateEvent = () => {
                     fee: createData.category === "GEN" ? 0 : 200,
                     pass_id: createData.day
                 }, {
-                    headers: { Authorization: `Bearer ${event?.token}` }
+                    headers: { Authorization: `Bearer ${event?.token}` },
+                    timeout: 10000
                 })
             } catch (err) {
                 console.log(err)

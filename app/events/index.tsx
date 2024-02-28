@@ -13,7 +13,7 @@ const Events = () => {
     const [data, setData] = useState<Record<string, infoType> | null>(null);
     const useEvent = useEventStore((state) => state.event);
     const router = useRouter();
-    const [cnt, setCnt] = useState<string>("GET")
+    const [cnt, setCnt] = useState<string>("COUNT?")
 
     if (!useEvent) {
         router.push("/");
@@ -21,9 +21,10 @@ const Events = () => {
     }
     const fCnt = async () => {
         try {
-            const {data} = await axios.get(`${API_URL}/admin/total-reg`,{
-                    headers:{  Authorization: `Bearer ${useEvent?.token}`}
-                })
+            const { data } = await axios.get(`${API_URL}/admin/total-reg`, {
+                headers: { Authorization: `Bearer ${useEvent?.token}` },
+                timeout: 10000
+            })
             setCnt(String(data.body.data.totalregisterations))
         } catch (err) {
         }
@@ -44,12 +45,12 @@ const Events = () => {
     return (
         <View className="w-full h-full flex flex-col items-center justify-center">
             <ScrollView className="w-full">
-                <View className="flex mt-2 flex-row items-center justify-between">
+                <View className="lex mt-2 flex-row items-center justify-between">
                     <View className="flex mt-2 flex-row items-center justify-start">
                         <Text className="text-[40px] ml-2 font-black">Events</Text>
                         <Text className="mr-2 text-[10px] font-black">({Object.keys(data).length})</Text>
                     </View>
-                    <Pressable onPress={fCnt} className="bg-black mt-2 border-2 border-black py-6 h-full w-[60px] mr-2 rounded-md"><Text className="text-white text-center font-black">{cnt}</Text></Pressable>
+                    <Pressable onPress={fCnt} className="bg-black mt-2 border-2 border-black flex flex-col items-center justify-center p-4 mr-2 rounded-md"><Text className="text-white text-center font-black">{cnt}</Text></Pressable>
                 </View>
                 <View>
                     {Object.entries(data).map(([key, event], event_idx) => {

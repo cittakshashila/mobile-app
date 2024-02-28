@@ -16,6 +16,9 @@
       "**/*"
     ],
     "ios": {
+        "config": {
+            "usesNonExemptEncryption": false
+        },
       "bundleIdentifier": "com.cittk.cittk",
       "infoPlist": {
         "CFBundleURLTypes": [
@@ -58,6 +61,9 @@
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/b8b8e114-1649-4fd8-8251-15218e3b6029"
-    }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

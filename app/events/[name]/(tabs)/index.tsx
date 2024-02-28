@@ -36,11 +36,6 @@ const event = () => {
                         <View>
                             <View className="flex mt-2 flex-row items-center justify-between">
                                 <Text className="text-[40px] ml-2 font-black">{data.title}</Text>
-                                {event?.isAdmin && <Pressable
-                                    onPress={() => router.push(`/events/${params.name}/emergency`)}
-                                >
-                                    <Entypo name="mail" size={24} color="black" className="mr-2"/>
-                                </Pressable>}
                             </View>
                             <View className="bg-black p-4 rounded-md mt-4">
                                 <Text className="text-white font-black text-center"> {data.category}</Text>
@@ -100,10 +95,10 @@ const event = () => {
                     </View>
                 </View>
                 <View className="w-full flex flex-col items-center justify-center">
-                    <Text className="text-[20px] font-black mt-4">In</Text>
+                    <Text className="text-[20px] font-black mt-4 ml-10 text-left w-full">In image</Text>
                     <Image className="mt-2 rounded-md" source={{ uri: MEDIA_URL(data.id, 1) }} style={{ width: 300, height: 200 }} />
-                    <Text className="text-[20px] font-black mt-4">Out</Text>
-                    <Image className="mt-2 rounded-md" source={{ uri: MEDIA_URL(data.id, 2) }} style={{ width: 300, height: 200 }} />
+                    <Text className="text-[20px] font-black mt-4 ml-10 text-left w-full">Out image</Text>
+                    <Image className="my-4 rounded-md" source={{ uri: MEDIA_URL(data.id, 2) }} style={{ width: 300, height: 200 }} />
                 </View>
             </ScrollView >
         </SafeAreaView >

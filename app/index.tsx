@@ -1,10 +1,11 @@
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useEventStore } from "../lib/store/events";
 import { useRouter } from "expo-router";
+import { SmallLoading } from "../lib/components";
 import { API_URL } from "../lib/constants";
 import axios from "axios";
-import { SmallLoading } from "../lib/components";
+import * as SecureStore from 'expo-secure-store';
 
 const Main = () => {
     const [UID, setUID] = useState<string>();
@@ -13,6 +14,18 @@ const Main = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const setEventStore = useEventStore((state) => state.setEvents)
     const router = useRouter();
+
+    useEffect(() => {
+        const getLocalData = async () => {
+            const data: string = await SecureStore.getItemAsync("token") || "";
+            if (data) {
+                const D = JSON.parse(data);
+                setEventStore({ token: D.token, isAdmin: D.isAdmin, event: D.event });
+                router.replace("/events");
+            }
+        }
+        getLocalData();
+    }, [])
 
     const Submit = async () => {
         setIsLoading(true);
@@ -25,10 +38,14 @@ const Main = () => {
             const { data } = await axios.post(API_URL + '/admin/event/login', {
                 admin_id: UID,
                 password: pwd
+            }, {
+                timeout: 10000
             });
+            await SecureStore.setItemAsync("token", JSON.stringify(data.body));
             setEventStore({ token: data.body.token, isAdmin: data.body.isAdmin, event: data.body.event })
-            router.push("/events");
+            router.replace("/events");
         } catch (e) {
+            console.log(e);
             setError("Invalid Credentials");
         } finally {
             setIsLoading(false);

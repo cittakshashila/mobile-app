@@ -37,11 +37,15 @@ export default () => {
                 tabBarIcon: EditIcon,
                 tabBarItemStyle: { display: event?.isAdmin ? "flex" : "none" },
                 tabBarLabel: "Edit",
-                href: `/events/${params.name}/edit`
             }} />
             <Tabs.Screen name="scan/index" options={{
                 tabBarIcon: ScanIcon,
                 tabBarLabel: "Scan"
+            }} />
+            <Tabs.Screen name="emergency/index" options={{
+                tabBarIcon: MailIcon,
+                tabBarItemStyle: { display: event?.isAdmin ? "flex" : "none" },
+                tabBarLabel: "Mail"
             }} />
             <Tabs.Screen name="list/index" options={{
                 tabBarIcon: ListIcon,

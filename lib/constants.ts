@@ -15,6 +15,6 @@ export const FOLDER_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/ma
 export const FOLDER_INFO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tree/master/info.json`;
 
 const production = true
-export const API_URL = production ? "https://api.cittakshashila.in": "https://backend-five-beryl.vercel.app";
+export const API_URL = !production ? "https://api.cittakshashila.in" : "https://backend-five-beryl.vercel.app";
 export const CLIENT_URL = "https://cittakshashila.in";
 export const MIDDLE_URL = production ? "https://middle-gh-app.vercel.app" : "http://localhost:4209";

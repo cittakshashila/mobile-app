@@ -29,15 +29,16 @@ export default function App() {
     }, [success]);
 
     const scan = async (data: string) => {
+        if (!data) return;
         try {
-            console.log(`${API_URL}/admin/allow`)
             await axios.put(`${API_URL}/admin/allow`, {
                 event_id: params.name,
                 user_email: data
             }, {
                 headers: {
                     authorization: `Bearer ${event?.token}`
-                }
+                },
+                timeout: 10000
             })
             setSuccess(true)
 
@@ -103,13 +104,14 @@ export default function App() {
                     }} />
                 )}
             </View>
-            <Pressable onPress={() => setActive(false)} className="fixed bottom-0 w-screen bg-black p-6 my-2 rounded-md"><Text className="text-center text-white">SWITCH TO INPUT</Text></Pressable>
+            <Pressable onPress={() => setActive(false)} className="fixed bottom-0 w-screen bg-gray-300 p-6 py-8 border-t-2 border-white"><Text className="text-center text-black font-bold">Switch to manual</Text></Pressable>
         </View>
     );
 
     return (
-        <View className="w-full h-full relative">
-            <View style={styles.container}>
+        <View className="w-full h-full relative flex flex-col items-center justify-center">
+            <View style={styles.container1}>
+                <Text className="font-bold mb-2">Email</Text>
                 <TextInput
                     onChange={(e) => {
                         setEmail(e.nativeEvent.text)
@@ -118,7 +120,7 @@ export default function App() {
                 >
                     {email}
                 </TextInput>
-                <Pressable onPress={() => handleBarCodeScanned({ data: email })} className="w-screen  bg-black p-6 my-2 rounded-md">{!isLoading ? <Text className="font-black text-center text-white">ALLOW</Text> : <SmallLoading />}</Pressable>
+                <Pressable onPress={() => handleBarCodeScanned({ data: email })} className="bg-black p-6 my-2 rounded-md">{!isLoading ? <Text className="font-black text-center text-white">ALLOW</Text> : <SmallLoading />}</Pressable>
                 {error &&
                     <Button title={"Error"} onPress={() => {
                         setError(false)
@@ -132,12 +134,18 @@ export default function App() {
                     }} />
                 )}
             </View>
-            <Pressable onPress={() => setActive(true)} className="fixed bottom-0 w-screen bg-black p-6 my-2 rounded-md"><Text className="text-center text-white">SWITCH TO SCANNER</Text></Pressable>
+            <Pressable onPress={() => setActive(true)} className="fixed bottom-0 w-full bg-gray-300 p-6 py-8 border-t-2 border-white"><Text className="text-center text-black font-bold">Switch to QR</Text></Pressable>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
+    container1: {
+        flex: 1,
+        flexDirection: "column",
+        justifyContent: "center",
+        width: "80%",
+    },
     container: {
         flex: 1,
         flexDirection: "column",
