@@ -12,17 +12,39 @@
       "backgroundColor": "#ffffff"
     },
     "scheme": "cittk",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.cittk.cittk"
+      "bundleIdentifier": "com.cittk.cittk",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleTypeRole": "Editor",
+            "CFBundleURLSchemes": [
+              "cittk"
+            ]
+          }
+        ]
+      }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.cittk.cittk"
+      "package": "com.cittk.cittk",
+      "intentFilters": [
+        {
+          "autoVerify": true,
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "cittk"
+            }
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
@@ -33,33 +55,9 @@
       }
     },
     "owner": "cittk",
-    "android": {
-      "package": "com.cittk.cittk",
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "cittk",
-              "host": "*",
-              "pathPrefix": "/",
-              "autoVerify": true
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ]
-    },
-    "ios": {
-      "bundleIdentifier": "com.cittk.cittk",
-      "infoPlist": {
-        "CFBundleURLTypes": [
-          {
-            "CFBundleTypeRole": "Editor",
-            "CFBundleURLSchemes": ["cittk"]
-          }
-        ]
-      }
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/b8b8e114-1649-4fd8-8251-15218e3b6029"
     }
   }
 }
