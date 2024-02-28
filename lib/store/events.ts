@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import Event from "../../app/events";
 
 type Event = {
     isAdmin: boolean;

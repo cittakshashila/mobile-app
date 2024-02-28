@@ -1,6 +1,6 @@
 import { Pressable, SafeAreaView, Text, TextInput, View } from "react-native"
 import { useState } from "react";
-import { useEventStore } from "../lib/store";
+import { useEventStore } from "../lib/store/events";
 import { useRouter } from "expo-router";
 import { API_URL } from "../lib/constants";
 import axios from "axios";

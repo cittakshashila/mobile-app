@@ -5,14 +5,14 @@ import { useGlobalSearchParams, useRouter } from 'expo-router';
 import { PARSE } from '../../../../../lib/utils';
 import { EVENT_TYPE } from '../../../../../lib/types';
 import { Loading, SmallLoading } from '../../../../../lib/components';
-import { useEventStore } from '../../../../../lib/store';
+import { useEventStore } from '../../../../../lib/store/events';
 import axios from 'axios';
-import { API_URL } from '../../../../../lib/constants';
+import { API_URL, CLIENT_URL, MIDDLE_URL } from '../../../../../lib/constants';
 
 const EditEvent = () => {
     const [buttonType, setButtonType] = useState<"SAVE" | "CONFIRM">("SAVE");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3" >("DAY1");
+    const [date, setDate] = useState<"DAY1" | "DAY2" | "DAY3">("DAY1");
 
     const router = useRouter();
     const { event } = useEventStore()
@@ -50,7 +50,7 @@ const EditEvent = () => {
 
     useEffect(() => {
         const CALL = async () => {
-            const res = await fetch("/api/event/" + params.name as `http${string}`);
+            const res = await fetch(CLIENT_URL + "/api/events/" + params.name as `http${string}`);
             const D = await res.json();
             setCreateData(PARSE(D.payload.blob.rawLines) as EVENT_TYPE);
             setDate(PARSE(D.payload.blob.rawLines).day)
@@ -65,7 +65,7 @@ const EditEvent = () => {
         if (buttonType == "CONFIRM") {
             setIsLoading(true);
             try {
-                const { data } = await axios.put(`${API_URL}/events`, {
+                await axios.put(`${API_URL}/events`, {
                     event_id: createData.id,
                     name: createData.title,
                     fee: createData.category === "GEN" ? 0 : 200,
@@ -74,22 +74,24 @@ const EditEvent = () => {
                     headers: { Authorization: `Bearer ${event?.token}` }
                 })
             } catch (err) {
+                console.log(err);
+                Alert.alert("Error", "Failed to update event");
+                setIsLoading(false);
+                return;
             }
-
             try {
-                const res = await fetch("/api/event/PUT" as `http${string}`, {
-                    method: "PUT",
-                    body: JSON.stringify({
-                        token: event?.token,
-                        event_name: params.name,
-                        event_data: createData,
-                        type: "UPDATE"
-                    })
+                await axios.put(MIDDLE_URL + "/PUT", {
+                    token: event?.token,
+                    event_name: params.name,
+                    event_data: createData,
+                    type: "UPDATE"
+                }, {
+                    timeout: 10000,
                 })
                 router.push(`/events` as `http${string}`);
                 return;
-            } catch (e) {
-                Alert.alert("Error", "Something went wrong");
+            } catch (e: any) {
+                Alert.alert("Error", e.message);
             } finally {
                 setIsLoading(false);
             }
@@ -277,6 +279,7 @@ const EditEvent = () => {
                         <View key={i} className="flex flex-row items-center">
                             <TextInput
                                 onChange={(e) => {
+                                    if (!createData.guidelines) createData.guidelines = [];
                                     createData.guidelines[i] = e.nativeEvent.text;
                                     setCreateData({ ...createData });
                                 }}

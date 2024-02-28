@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native"
-import { INFO_URL, MEDIA_URL } from "../../../../lib/constants";
+import { CLIENT_URL, INFO_URL, MEDIA_URL } from "../../../../lib/constants";
 import { PARSE } from "../../../../lib/utils";
 import { EVENT_TYPE } from "../../../../lib/types";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { Loading } from "../../../../lib/components";
-import { useEventStore } from "../../../../lib/store";
+import { useEventStore } from "../../../../lib/store/events";
+import { Entypo } from '@expo/vector-icons';
 
 const event = () => {
     const { event } = useEventStore()
@@ -18,7 +19,7 @@ const event = () => {
 
     useEffect(() => {
         const CALL = async () => {
-            const res = await fetch("/api/event/" + params.name as `http${string}`);
+            const res = await fetch(CLIENT_URL + "/api/events/" + params.name as `http${string}`);
             const data = await res.json();
             setData(PARSE(data.payload.blob.rawLines) as EVENT_TYPE);
         }
@@ -33,7 +34,14 @@ const event = () => {
                 <View>
                     <View>
                         <View>
-                            <Text className="text-[30px] font-black mt-4"> {data.title} </Text>
+                            <View className="flex mt-2 flex-row items-center justify-between">
+                                <Text className="text-[40px] ml-2 font-black">{data.title}</Text>
+                                {event?.isAdmin && <Pressable
+                                    onPress={() => router.push(`/events/${params.name}/emergency`)}
+                                >
+                                    <Entypo name="mail" size={24} color="black" className="mr-2"/>
+                                </Pressable>}
+                            </View>
                             <View className="bg-black p-4 rounded-md mt-4">
                                 <Text className="text-white font-black text-center"> {data.category}</Text>
                             </View>

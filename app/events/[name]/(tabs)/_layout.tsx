@@ -1,6 +1,6 @@
 import { Tabs, useGlobalSearchParams } from "expo-router"
 import { AntDesign } from '@expo/vector-icons';
-import { useEventStore } from '../../../../lib/store'
+import { useEventStore } from '../../../../lib/store/events'
 
 const EditIcon = () => {
     return (<AntDesign name="edit" size={24} color="black" />)
@@ -16,6 +16,10 @@ const ListIcon = () => {
 
 const HomeIcon = () => {
     return (<AntDesign name="home" size={24} color="black" />)
+}
+
+const MailIcon = () => {
+    return (<AntDesign name="mail" size={24} color="black" />)
 }
 
 export default () => {
