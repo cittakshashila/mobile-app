@@ -18,6 +18,10 @@ const HomeIcon = () => {
     return (<AntDesign name="home" size={24} color="black" />)
 }
 
+const MailIcon = () => {
+    return (<AntDesign name="mail" size={24} color="black" />)
+}
+
 export default () => {
     const params = useGlobalSearchParams()
     const { event } = useEventStore()

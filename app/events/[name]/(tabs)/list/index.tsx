@@ -36,6 +36,7 @@ const List = () => {
         <ScrollView>
             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#f0f0f0', borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+                    <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>S. No</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Name</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Phone</Text>
                     <Text style={{ flex: 1, fontWeight: 'bold', textAlign: 'center' }}>Email</Text>
@@ -44,6 +45,9 @@ const List = () => {
                 </View>
                 {data.map((user, user_idx) => (
                     <View key={user_idx} style={{ flexDirection: 'row', padding: 10, borderBottomWidth: 1, borderBottomColor: '#ddd' }}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(String(user_idx + 1))}>
+                            <Text style={{ textAlign: 'center' }}>{truncate(String(user_idx + 1), 10)}</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity style={{ flex: 1 }} onPress={() => copyToClipboard(user.name)}>
                             <Text style={{ textAlign: 'center' }}>{truncate(user.name, 10)}</Text>
                         </TouchableOpacity>
