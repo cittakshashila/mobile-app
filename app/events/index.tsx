@@ -50,7 +50,7 @@ const Events = () => {
                         <Text className="text-[40px] ml-2 font-black">Events</Text>
                         <Text className="mr-2 text-[10px] font-black">({Object.keys(data).length})</Text>
                     </View>
-                    <Pressable onPress={fCnt} className="bg-black mt-2 border-2 border-black flex flex-col items-center justify-center p-4 mr-2 rounded-md"><Text className="text-white text-center font-black">{cnt}</Text></Pressable>
+                    {useEvent.isAdmin && <Pressable onPress={fCnt} className="bg-black mt-2 border-2 border-black flex flex-col items-center justify-center p-4 mr-2 rounded-md"><Text className="text-white text-center font-black">{cnt}</Text></Pressable>}
                 </View>
                 <View>
                     {Object.entries(data).map(([key, event], event_idx) => {
