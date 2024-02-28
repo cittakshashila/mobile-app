@@ -16,5 +16,5 @@ export const FOLDER_INFO_URL = `https://github.com/${REPO_OWNER}/${REPO_NAME}/tr
 
 const production = true
 export const API_URL = production ? "https://api.cittakshashila.in" : "https://backend-five-beryl.vercel.app";
-
-export const TOKEN_SECRET = 'veryverysecretthingisthis'
+export const CLIENT_URL = production ? "https://cittakshashila.in" : "http://localhost:3000";
+export const MIDDLE_URL = production ? "https://middle-gh-app.vercel.app" : "http://localhost:3000";

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Image, Pressable, SafeAreaView, ScrollView, Text, TextInput, View } from "react-native"
-import { INFO_URL, MEDIA_URL } from "../../../../lib/constants";
+import { CLIENT_URL, INFO_URL, MEDIA_URL } from "../../../../lib/constants";
 import { PARSE } from "../../../../lib/utils";
 import { EVENT_TYPE } from "../../../../lib/types";
 import { useGlobalSearchParams, useRouter } from "expo-router";
 import { Loading } from "../../../../lib/components";
-import { useEventStore } from "../../../../lib/store";
+import { useEventStore } from "../../../../lib/store/events";
 
 const event = () => {
     const { event } = useEventStore()
@@ -18,7 +18,7 @@ const event = () => {
 
     useEffect(() => {
         const CALL = async () => {
-            const res = await fetch("/api/event/" + params.name as `http${string}`);
+            const res = await fetch(CLIENT_URL + "/api/events/" + params.name as `http${string}`);
             const data = await res.json();
             setData(PARSE(data.payload.blob.rawLines) as EVENT_TYPE);
         }

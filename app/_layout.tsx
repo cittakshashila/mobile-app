@@ -1,15 +1,6 @@
-import { Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
-import { Stack, Tabs, useRouter } from 'expo-router';
-import { Link } from 'expo-router';
-import { Fragment, useEffect } from 'react';
-import { API } from '../lib/utils';
-import { useEventStore } from '../lib/store';
-
-const HeaderIcon = () => {
-    return (
-        <Link className="w-fit h-full" href='/'><Image width={20} height={32} source={{ uri: "https://cdn.discordapp.com/attachments/1196051219836305498/1199789835649548408/tk24-logo.png" }} /></Link>
-    )
-}
+import { SafeAreaView, TouchableOpacity } from 'react-native';
+import { Stack } from 'expo-router';
+import { Fragment } from 'react';
 
 const HeaderLeft = ({ props }: any) => {
     return (
@@ -23,17 +14,7 @@ const HeaderLeft = ({ props }: any) => {
     );
 };
 
-export const call = new API("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");
-
 const StackLayout = () => {
-    const useEvent = useEventStore((state) => state.event);
-    const router = useRouter();
-
-    useEffect(() => {
-        if (useEvent) {
-            router.push("/events" as `http${string}`);
-        }
-    }, [])
     return (
         <Fragment>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -41,7 +22,6 @@ const StackLayout = () => {
                 <Stack screenOptions={(navigation) => ({
                     headerStyle: { backgroundColor: 'white' },
                     headerLeft: () => <HeaderLeft props={navigation} />,
-                    headerTitle: () => <HeaderIcon />,
                 })}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="events/index" />

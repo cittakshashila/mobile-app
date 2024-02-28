@@ -3,7 +3,7 @@ import { useEventStore } from "../../lib/store/events";
 import { useEffect, useState } from "react";
 import { Loading } from "../../lib/components";
 import { useRouter } from "expo-router";
-import { FOLDER_INFO_URL, MEDIA_URL } from "../../lib/constants";
+import { CLIENT_URL, MEDIA_URL } from "../../lib/constants";
 import { PARSE } from "../../lib/utils";
 
 const Events = () => {
@@ -18,7 +18,7 @@ const Events = () => {
     }
     useEffect(() => {
         const GET = async () => {
-            const res = await fetch('/api/event/folder-info');
+            const res = await fetch(CLIENT_URL + '/api/events/folder');
             let resData = PARSE((await res.json()).payload.blob.rawLines) as Record<string, infoType>;
             if (!(useEvent.isAdmin)) {
                 const filteredEntries = Object.entries(resData).filter(([key, _]) => useEvent.event.includes(key));
